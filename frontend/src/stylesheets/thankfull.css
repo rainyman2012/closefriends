@@ -1,0 +1,28 @@
+.popo {
+    color: rgb(33, 37, 33);
+    padding: 5px 10px;
+    text-align: center;
+    display: block;
+    font-size: 15px;
+    margin: auto;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 30px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+}
+
+.whatsApp {
+    background-color: rgb(25, 165, 48);
+    border: 2px solid rgb(25, 165, 48);
+}
+
+.instagram {
+    background-color: #ca439c;
+    border: 2px solid #ca439c;
+}
+
+.createOwnSurveyBtn {
+    background-color: rgb(167, 73, 11);
+    border: 2px solid rgb(167, 73, 11);
+}

@@ -1,0 +1,28 @@
+.selectable img:hover {
+    border: 5px solid green;
+    cursor: pointer;
+}
+
+.selected {
+    border: 5px solid green;
+}
+
+.unselected {
+    border: 5px solid white;
+}
+
+.mobDesk {
+    justify-content: space-evenly;
+}
+
+@media (min-width: 992px) {
+    .mobDesk {
+        justify-content: space-evenly;
+    }
+}
+
+img {
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}

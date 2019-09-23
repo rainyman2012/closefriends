@@ -1,0 +1,23 @@
+.my-flex-container {
+    border: 2px solid green;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.my-flex-container-column {
+    border: 2px solid green;
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+.my-flex-item {
+    background-color: lightgrey;
+    border: 1px dotted gray;
+    height: 48px;
+}
+
+.my-flex-item-2 {
+    background-color: lightgrey;
+    border: 1px dotted gray;
+    height: 96px;
+}

@@ -1,0 +1,33 @@
+.ehs-poll {
+    padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+    .ehs-poll {
+        padding: 0 100px;
+    }
+}
+
+.content_basic {
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-style: solid;
+}
+
+.my_btn {
+    display: block;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+#color_list {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}

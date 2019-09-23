@@ -1,0 +1,54 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/subprocess.py", line 325, in call
+    return p.wait(timeout=timeout)
+  File "/usr/lib/python3.7/subprocess.py", line 990, in wait
+    return self._wait(timeout=timeout)
+  File "/usr/lib/python3.7/subprocess.py", line 1624, in _wait
+    (pid, sts) = self._try_wait(0)
+  File "/usr/lib/python3.7/subprocess.py", line 1589, in _try_wait
+    return (pid, sts)
+  File "/usr/lib/python3.7/subprocess.py", line 1589, in _try_wait
+    return (pid, sts)
+  File "/usr/lib/python3.7/bdb.py", line 88, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/pudb/debugger.py", line 191, in dispatch_line
+    raise bdb.BdbQuit
+bdb.BdbQuit
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/pudb/__init__.py", line 146, in runscript
+    dbg._runscript(mainpyfile)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/pudb/debugger.py", line 468, in _runscript
+    self.run(statement)
+  File "/usr/lib/python3.7/bdb.py", line 585, in run
+    exec(cmd, globals, locals)
+  File "<string>", line 1, in <module>
+  File "manage.py", line 14, in <module>
+    execute_from_command_line(sys.argv)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/__init__.py", line 381, in execute_from_command_line
+    utility.execute()
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/__init__.py", line 375, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/base.py", line 323, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/commands/runserver.py", line 60, in execute
+    super().execute(*args, **options)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/base.py", line 364, in execute
+    output = self.handle(*args, **options)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/commands/runserver.py", line 95, in handle
+    self.run(**options)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/core/management/commands/runserver.py", line 102, in run
+    autoreload.run_with_reloader(self.inner_run, **options)
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/utils/autoreload.py", line 589, in run_with_reloader
+    exit_code = restart_with_reloader()
+  File "/home/ehsan/projects/assignment/env/lib/python3.7/site-packages/django/utils/autoreload.py", line 221, in restart_with_reloader
+    exit_code = subprocess.call(args, env=new_environ, close_fds=False)
+  File "/usr/lib/python3.7/subprocess.py", line 325, in call
+    return p.wait(timeout=timeout)
+  File "/usr/lib/python3.7/subprocess.py", line 1756, in kill
+    self.send_signal(signal.SIGKILL)
+  File "/usr/lib/python3.7/subprocess.py", line 1746, in send_signal
+    os.kill(self.pid, sig)
+ProcessLookupError: [Errno 3] No such process

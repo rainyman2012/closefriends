@@ -44,7 +44,7 @@ class CustomLayout extends React.Component {
       border: "5px solid gray",
       backgroundColor: "gray"
     };
-    const background_color = "#e47fb4";
+    const background_color = "#c64b76";
     const borderWidth = "3px";
 
     return (
@@ -159,7 +159,7 @@ class CustomLayout extends React.Component {
             >
               <Icon type="linkedin" />
             </a>
-            <p>
+            <p style={{ marginTop: "5px" }}>
               If you like to be a contributor to this project you can checkout
               this github
             </p>

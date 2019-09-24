@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as actionType from "./actionTypes";
-import { HOSTNAME } from "./actionTypes";
+import { HOSTNAME } from "../../static";
 import { setLanguage } from "./general";
 
 export const surveyStart = () => {

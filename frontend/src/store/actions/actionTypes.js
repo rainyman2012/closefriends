@@ -11,6 +11,3 @@ export const STATISTICS_FAIL = "STATISTICS_FAIL";
 
 export const GENERAL_COLOR_CHANGED = "GENERAL_COLOR_CHANGED";
 export const GENERAL_LANGUAGE_SET = "GENERAL_LANGUAGE_SET";
-
-//export const HOSTNAME = "http://ehsan-ahmadi.herokuapp.com";
-export const HOSTNAME = "http://localhost:8000";

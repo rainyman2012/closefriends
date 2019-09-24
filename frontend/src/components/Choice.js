@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../stylesheets/choice_flex_box.css";
 import { Row, Col } from "antd";
 import "../static";
-import { HOSTNAME } from "../store/actions/actionTypes";
+import { HOSTNAME } from "../static";
 
 class Choice extends Component {
   render() {

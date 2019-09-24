@@ -42,16 +42,23 @@ class Choice(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        img = Image.open(self.image.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+        try:
+            img = Image.open(self.image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path)
+        except:
+            pass
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         if self.name:
             return self.name
-        else:
+        elif self.image:
             return self.image.name.rsplit('/', 1)[-1]
 
     @property

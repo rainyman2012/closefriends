@@ -12,9 +12,12 @@ const Lang = {
       sex: "جنسیت"
     },
     thankful: {
-      thanks: " بابت شرکت در این نظر سنجی {} تشکر ",
+      thanks: " بابت شرکت در این آزمون {} تشکر ",
       createYourSurveyBtn: "ایجاد یک نظر سنجی جدید",
-      link: "لینک تولید شده برای نظر سنجی شما در زیر آمده است",
+      link: "لینک آزمون شما تولید شد",
+      friends: "<span>این لینک را با دوستان خود به اشتراک بگذارید</span> ",
+      toResult:
+        "شما می تواند با استفاده از همین لینک نتیجه تا به الان را ببینید",
       instagram: "اینستاگرام",
       whatsApp: "واتس آپ",
       showResult: "نمایش نتیجه تا به الان",
@@ -81,10 +84,13 @@ const Lang = {
       bisexual: "BiSexual",
       sex: "Sex"
     },
-    thanful: {
+    thankful: {
       thanks: "Thank you {} for your attending",
       createYourSurveyBtn: "Create Your Survey",
       link: "This is your link",
+      friends:
+        "<span>&#128071;</span> You can share this link among your friends to attend your survey",
+      toResult: "You can see your result from this link too",
       instagram: "Instagram",
       whatsApp: "WhatsApp",
       showResult: "Show Result",

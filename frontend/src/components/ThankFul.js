@@ -62,12 +62,9 @@ class ThankFul extends Component {
 
   copyToClipBoard = (e, msg) => {
     /* Select the text field */
-    const textField = document.createElement("textarea");
-    textField.innerText = e.target.innerText;
-    document.body.appendChild(textField);
-    textField.select();
+
+    e.target.select();
     document.execCommand("copy");
-    textField.remove();
 
     /* Copy the text inside the text field */
 
@@ -80,7 +77,6 @@ class ThankFul extends Component {
 
   render() {
     const localhost = window.location.hostname;
-    const general_texts = T[this.props.language];
     const page_texts = T[this.props.language].thankful;
     let rtl_support = null;
     if (this.props.language === "fa") {
@@ -118,8 +114,11 @@ class ThankFul extends Component {
                 <p style={rtl_support}>
                   {page_texts.thanks.replace("{}", this.props.thanksTo)}
                 </p>
-
-                <p style={rtl_support}>{page_texts.link}</p>
+                <p style={rtl_support}>{page_texts.link} </p>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
               </div>
 
               <Row type="flex" justify="center">
@@ -130,14 +129,19 @@ class ThankFul extends Component {
                     border: `2px solid ${this.props.color}`
                   }}
                 >
-                  <p
+                  <textarea
+                    style={{ width: "100%" }}
                     onClick={(e, msg = page_texts.copied) =>
                       this.copyToClipBoard(e, msg)
                     }
-                  >{`http://${localhost}/su/${this.props.currentSurvey.uuid}`}</p>
+                  >{`http://${localhost}/su/${this.props.currentSurvey.uuid}`}</textarea>
                 </Col>
               </Row>
-
+              <Row style={{ marginTop: "10px" }}>
+                <Col>
+                  <p style={rtl_support}>{parse(page_texts.friends)}</p>
+                </Col>
+              </Row>
               <Row
                 type="flex"
                 justify="center"

@@ -11,12 +11,15 @@ const myPadding = {
   padding: "0 50px"
 };
 class CustomLayout extends React.Component {
+  state = {
+    background_color: "#c64b76"
+  };
   changeColorHandler = (e, color) => {
     this.props.changeColor(color);
   };
 
   componentWillMount() {
-    document.body.style.backgroundColor = "#e47fb4";
+    document.body.style.backgroundColor = this.state.background_color;
   }
   render() {
     // const { authenticated } = this.props;
@@ -44,7 +47,7 @@ class CustomLayout extends React.Component {
       border: "5px solid gray",
       backgroundColor: "gray"
     };
-    const background_color = "#c64b76";
+    const { background_color } = this.state;
     const borderWidth = "3px";
 
     return (

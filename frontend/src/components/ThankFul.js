@@ -62,12 +62,11 @@ class ThankFul extends Component {
 
   copyToClipBoard = (e, msg) => {
     /* Select the text field */
-
     e.target.select();
-    document.execCommand("copy");
-
     /* Copy the text inside the text field */
-
+    document.execCommand("copy");
+    // I prefer to not show the the whole text area selected.
+    e.target.focus();
     message.success(msg);
   };
 

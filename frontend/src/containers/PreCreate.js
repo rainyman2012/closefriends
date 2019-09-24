@@ -35,6 +35,9 @@ class PreCreate extends Component {
 
   handleLangMenuClick = e => {
     this.props.setLanguage(e.key);
+
+    if (e.key === "en") document.body.style.fontFamily = "Indie Flower";
+    else document.body.style.fontFamily = "Amiri";
   };
 
   handleSexMenuClick = e => {

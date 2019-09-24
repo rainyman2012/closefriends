@@ -137,9 +137,14 @@ class CustomLayout extends React.Component {
 
         <Footer
           className="custom_footer"
-          style={{ textAlign: "center", backgroundColor: background_color }}
+          style={{
+            padding: "24px 0px",
+            textAlign: "center",
+            backgroundColor: background_color,
+            fontFamily: "sans-serif"
+          }}
         >
-          Copy Right ©2019 Created by Ehsan
+          CopyRight ©2019 Created by Ehsan Ahmadi
           <p>
             <a
               style={{ fontSize: "20px" }}
@@ -153,6 +158,16 @@ class CustomLayout extends React.Component {
               href="https://www.linkedin.com/in/ehsan-ahmadi-5b3459101/"
             >
               <Icon type="linkedin" />
+            </a>
+            <p>
+              If you like to be a contributor to this project you can checkout
+              this github
+            </p>
+            <a
+              style={{ fontSize: "20px" }}
+              href="https://github.com/rainyman2012/closefriends"
+            >
+              <Icon type="github" />
             </a>
           </p>
         </Footer>

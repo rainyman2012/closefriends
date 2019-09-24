@@ -2,6 +2,7 @@ from django.db import models
 from jsonfield import JSONField
 import uuid
 import base64
+from PIL import Image
 
 
 def generate_uuid():
@@ -38,6 +39,14 @@ class Choice(models.Model):
 
     question = models.ForeignKey(
         Question, blank=True, null=True, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
     def __str__(self):
         if self.name:

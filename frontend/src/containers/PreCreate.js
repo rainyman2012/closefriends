@@ -117,7 +117,7 @@ class PreCreate extends Component {
               placeholder={page_texts.enterYourName}
             />
             {this.state.enterNameError ? (
-              <p style={{ ...{ color: "#f5222d" }, ...rtl_support }}>
+              <p style={{ ...{ color: "#ffffff" }, ...rtl_support }}>
                 {page_texts.enterNameErrorTxt}
               </p>
             ) : (
@@ -145,7 +145,7 @@ class PreCreate extends Component {
               </Button>
             </Dropdown>
             {this.state.enterSexError ? (
-              <p style={{ ...{ color: "#f5222d" }, ...rtl_support }}>
+              <p style={{ ...{ color: "#ffffff" }, ...rtl_support }}>
                 {page_texts.enterSexErrorTxt}
               </p>
             ) : (

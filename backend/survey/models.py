@@ -45,7 +45,7 @@ class Choice(models.Model):
         try:
             img = Image.open(self.image.path)
             if img.height > 300 or img.width > 300:
-                output_size = (300, 300)
+                output_size = (300, 400)
                 img.thumbnail(output_size)
                 img.save(self.image.path)
         except:
@@ -60,6 +60,8 @@ class Choice(models.Model):
             return self.name
         elif self.image:
             return self.image.name.rsplit('/', 1)[-1]
+        else:
+            return "--"
 
     @property
     def imagename(self):

@@ -1,7 +1,7 @@
 const Lang = {
   fa: {
     precreate: {
-      create: "به منظور ساخت ,نام و زبان خود را وارد کنید",
+      create: "به منظور ساخت آزمون ,نام و زبان و جنسیت خود را وارد کنید",
       enterYourName: "نام خود را وارد کنید",
       start: "شروع",
       enterNameErrorTxt: "این فیلد نباید خالی باشد",
@@ -75,7 +75,7 @@ const Lang = {
 
   en: {
     precreate: {
-      create: "To start creating your survey enter your name",
+      create: "To start creating your survey fill out fields below",
       enterYourName: "Enter Your Name",
       start: "Start",
       enterNameErrorTxt: "You must set a value in this field",

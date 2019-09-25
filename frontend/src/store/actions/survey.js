@@ -33,7 +33,7 @@ export const surveySuccessCreated = (survey, userName, userType) => {
   };
 };
 
-export const surveySuccessUpdated = (survey, userName, userType) => {
+export const surveySuccessUpdated = () => {
   return {
     type: actionType.SURVEY_SUCCESS_UPDATED
   };
@@ -120,12 +120,10 @@ export const surveyUpdateRealAnswerData = (uuid, answers) => {
       }
     })
       .then(res => {
-        console.log(res);
-        //dispatch(surveySuccessUpdated(res));
+        dispatch(surveySuccessUpdated());
       })
       .catch(err => {
         console.log(err);
-
         dispatch(surveyFail(err));
       });
   };
@@ -147,7 +145,7 @@ export const surveyUpdateUserAnswerData = (uuid, answers, name) => {
       }
     })
       .then(res => {
-        console.log(res);
+        dispatch(surveySuccessUpdated());
       })
       .catch(err => {
         dispatch(surveyFail(err));

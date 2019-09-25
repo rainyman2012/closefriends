@@ -66,7 +66,7 @@ class ThankFul extends Component {
     /* Copy the text inside the text field */
     document.execCommand("copy");
     // I prefer to not show the the whole text area selected.
-    e.target.focus();
+    e.target.blur();
     message.success(msg);
   };
 

@@ -41,13 +41,12 @@ const surveySuccessReceived = (state, action) => {
   });
 };
 
-// const surveySuccessUpdated = (state, action) => {
-//   return updateObject(state, {
-//     currentSurvey: action.currentSurvey,
-//     error: null,
-//     loading: false
-//   });
-// };
+const surveySuccessUpdated = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
 
 const serveyFail = (state, action) => {
   return updateObject(state, {
@@ -58,6 +57,9 @@ const serveyFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.SURVEY_SUCCESS_UPDATED:
+      return surveySuccessUpdated(state, action);
+
     case actionTypes.SURVEY_START:
       return surveyStart(state, action);
 

@@ -12,7 +12,7 @@ const Lang = {
       sex: "جنسیت"
     },
     thankful: {
-      thanks: " بابت شرکت در این آزمون {} تشکر ",
+      thanks: "{} بابت شرکت در این آزمون  تشکر ",
       createYourSurveyBtn: "ایجاد یک نظر سنجی جدید",
       link: "لینک آزمون شما تولید شد",
       friends: "<span>این لینک را با دوستان خود به اشتراک بگذارید</span> ",
@@ -40,7 +40,7 @@ const Lang = {
 
     survey: {
       hi: "سلام",
-      fillout: " لطفا به سوالات زیر جواب دهید",
+      fillout: " .لطفا به سوالات زیر جواب دهید",
       createYourSurveyBtn: "ایجاد یک نظر سنجی جدید",
       next: "بعدی",
       prev: "قبلی",

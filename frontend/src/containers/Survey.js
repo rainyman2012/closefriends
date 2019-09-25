@@ -165,7 +165,8 @@ class Survey extends Component {
 
     if (this.props.language === "fa")
       rtl_support = {
-        textAlign: "right"
+        textAlign: "right",
+        marginRight: "10px"
       };
     if (!currentSurvey)
       return (

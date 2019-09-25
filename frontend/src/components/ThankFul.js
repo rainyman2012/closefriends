@@ -90,9 +90,7 @@ class ThankFul extends Component {
         {this.props.currentSurvey ? (
           this.props.userType == "user" ? (
             <div style={{ textAlign: "center" }}>
-              <p style={rtl_support}>
-                {page_texts.thanks.replace("{}", this.props.thanksTo)}
-              </p>
+              <p>{page_texts.thanks.replace("{}", this.props.thanksTo)}</p>
 
               <Row type="flex" justify="center">
                 <div>
@@ -110,9 +108,7 @@ class ThankFul extends Component {
                 page_texts.whatsAppLink
               )}
               <div style={{ textAlign: "center" }}>
-                <p style={rtl_support}>
-                  {page_texts.thanks.replace("{}", this.props.thanksTo)}
-                </p>
+                <p>{page_texts.thanks.replace("{}", this.props.thanksTo)}</p>
                 <p style={rtl_support}>{page_texts.link} </p>
                 <span>&#128071;</span>
                 <span>&#128071;</span>

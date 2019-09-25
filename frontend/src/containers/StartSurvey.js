@@ -59,6 +59,22 @@ class StartSurvey extends Component {
     if (this.state.twiceAttendError)
       return (
         <div style={{ textAlign: "center" }}>
+          <Row type="flex" justify="center" style={{ marginBottom: "50px" }}>
+            <Col>
+              <Button
+                type="success"
+                size={size}
+                onClick={() => this.props.history.push("/precreate")}
+              >
+                <Icon
+                  type="heart"
+                  theme="filled"
+                  style={{ color: "#eb2f96" }}
+                />
+                {page_texts.createYourSurveyBtn}
+              </Button>
+            </Col>
+          </Row>
           <p>{general_texts.twiceAttendError}... </p>
         </div>
       );

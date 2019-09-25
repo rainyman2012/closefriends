@@ -9,17 +9,23 @@ class Question extends Component {
 
   render() {
     let rtl_support = null;
+    const general_style = {
+      fontWeight: "bold"
+    };
 
     if (this.props.language === "fa")
       rtl_support = {
-        textAlign: "right"
+        textAlign: "right",
+        marginRight: "10px"
       };
     return (
       <React.Fragment>
         {this.props.userType === "admin" ? (
-          <p style={rtl_support}> {this.props.question.name} </p>
+          <p style={{ ...general_style, ...rtl_support }}>
+            {this.props.question.name}{" "}
+          </p>
         ) : (
-          <p style={rtl_support}>
+          <p style={{ ...general_style, ...rtl_support }}>
             {this.props.question.ask.replace("{}", this.props.survey.name)}
           </p>
         )}

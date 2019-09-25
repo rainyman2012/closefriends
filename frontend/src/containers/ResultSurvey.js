@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import Hoc from "../hoc/hoc";
 import { getStatisticsData } from "../store/actions/statistics";
 import { Button, Row, Col, Spin } from "antd";
-import { Table, Progress, Tag } from "antd";
+import { Table, Progress, message } from "antd";
 import Cookies from "universal-cookie";
 import { Lang as T } from "../languages";
 
@@ -68,7 +68,18 @@ class ResultSurvey extends Component {
     this.props.getStatistics(this.props.match.params.uuid);
   }
 
+  copyToClipBoard = (e, msg) => {
+    /* Select the text field */
+    e.target.select();
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+    // I prefer to not show the the whole text area selected.
+    e.target.blur();
+    message.success(msg);
+  };
+
   render() {
+    const localhost = window.location.hostname;
     const general_texts = T[this.props.language];
     const page_texts = T[this.props.language].resultSurvey;
 
@@ -113,17 +124,34 @@ class ResultSurvey extends Component {
               />
             </Col>
           </Row>
-          <Row type="flex" justify="center">
-            <Col>
+          <Row type="flex" justify="center" style={{ marginTop: "10px" }}>
+            <Col span={23}>
               <hr />
-              <p style={rtl_support}>
-                {page_texts.totalQuestionTxt} :{" "}
-                {this.props.statistics.total_questions}
-              </p>
-              <p style={rtl_support}>
-                {page_texts.totalParticipantsTxt}:{" "}
-                {this.props.statistics.participant_count}
-              </p>
+              <div style={{ textAlign: "center" }}>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
+                <span>&#128071;</span>
+              </div>
+
+              <p style={rtl_support}>{page_texts.toResult}</p>
+              <textarea
+                style={{ width: "100%" }}
+                onClick={(e, msg = page_texts.copied) =>
+                  this.copyToClipBoard(e, msg)
+                }
+              >{`http://${localhost}/su/${this.props.statistics.uuid}`}</textarea>
+              <hr />
+              <div align="center">
+                <p>
+                  {page_texts.totalQuestionTxt} :{" "}
+                  {this.props.statistics.total_questions}
+                </p>
+                <p>
+                  {page_texts.totalParticipantsTxt}:{" "}
+                  {this.props.statistics.participant_count}
+                </p>
+              </div>
             </Col>
           </Row>
         </div>
@@ -135,7 +163,6 @@ class ResultSurvey extends Component {
 const mapStateToProps = state => {
   return {
     statistics: state.statistics.statistics,
-    // userName: state.survey.userName,
     serverError: state.statistics.error,
     userType: state.statistics.userType,
     loading: state.statistics.loading,

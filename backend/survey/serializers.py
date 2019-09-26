@@ -82,10 +82,11 @@ class StatisticSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
     participant_count = serializers.SerializerMethodField()
     total_questions = serializers.SerializerMethodField()
+    questions = serializers.SerializerMethodField()
 
     class Meta:
         model = Survey
-        fields = ('name', 'uuid', 'answers',
+        fields = ('name', 'uuid', 'questions', 'answers',
                   'participant_count', 'total_questions')
 
     def get_answers(self, obj):
@@ -98,6 +99,12 @@ class StatisticSerializer(serializers.ModelSerializer):
 
     def get_total_questions(self, obj):
         return obj.questions.filter(Q(sex__exact=obj.sex) | Q(sex__isnull=True)).count()
+
+    def get_questions(self, obj):
+        queryset = Question.objects.filter(
+            Q(sex__exact=obj.sex) | Q(sex__isnull=True))
+        questions = QuestionSerializer(queryset, many=True, read_only=True)
+        return questions.data
 
 
 class SurveySerializer(serializers.ModelSerializer):

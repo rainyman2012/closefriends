@@ -24,6 +24,7 @@ class Question(models.Model):
     sex = models.CharField(max_length=50, blank=True, null=True)
     target = models.ManyToManyField(Target)
     point = models.PositiveSmallIntegerField(blank=True, null=True)
+    analyze = JSONField(null=True)
 
     def __str__(self):
         if self.name_en:

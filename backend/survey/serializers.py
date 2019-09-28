@@ -29,7 +29,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('choices', 'name', 'ask', 'sex')
+        fields = ('choices', 'name', 'ask', 'sex', 'analyze')
 
     def get_choices(self, obj):
         queryset = obj.choice_set.all()
@@ -41,7 +41,8 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('name', 'total_correct', 'answers', 'correct_percentage')
+        fields = ('id', 'name', 'total_correct',
+                  'answers', 'correct_percentage')
 
     def update(self, instance, validated_data):
         raise_errors_on_nested_writes('update', self, validated_data)
@@ -87,7 +88,7 @@ class StatisticSerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
         fields = ('name', 'uuid', 'questions', 'answers',
-                  'participant_count', 'total_questions')
+                  'participant_count', 'total_questions', 'lang')
 
     def get_answers(self, obj):
         queryset = obj.answer_set.all()

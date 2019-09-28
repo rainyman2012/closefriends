@@ -1,76 +1,55 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Hoc from "../hoc/hoc";
 import { getStatisticsData } from "../store/actions/statistics";
 import { Button, Row, Col, Spin } from "antd";
 import { Table, Progress, message } from "antd";
 import Cookies from "universal-cookie";
+import "../stylesheets/DetailResult.css";
 import { Lang as T } from "../languages";
 
-function renderColumn(page_texts, uuid) {
+import { HOSTNAME } from "../static";
+
+function renderColumn(page_texts, name, lang) {
+  console.log("lang", lang);
+  let align = "left";
+  if (lang === "fa") align = "right";
   const columns = [
     {
-      title: page_texts.nameColumn,
-      dataIndex: "name",
-      key: "name",
-      width: "25%",
-      sorter: (a, b) => a.name.length - b.name.length,
+      title: page_texts.question,
+      dataIndex: "question",
+      key: "question",
+      width: "50%",
+      align: align,
+      sorter: (a, b) => a.question.length - b.question.length,
       sortDirections: ["descend"]
     },
     {
-      title: page_texts.answerColumn,
-      dataIndex: "total_correct",
-      width: "25%",
-
-      key: "total_correct",
-      sorter: (a, b) => a.total_correct - b.total_correct,
-      align: "center"
-    },
-
-    {
-      title: page_texts.percentageColumn,
-      dataIndex: "correct_percentage",
-      width: "25%",
-      key: "total_percentage",
-      sorter: (a, b) => a.correct_percentage - b.correct_percentage,
-      align: "left",
-      render: correct_percentage => {
-        let custom_color = "";
-        if (correct_percentage >= 50) custom_color = "green";
-        else custom_color = "red";
-
-        return (
-          <Progress
-            type="circle"
-            percent={correct_percentage}
-            width={40}
-            strokeColor={custom_color}
-            format={percent => {
-              return (
-                <spam style={{ fontSize: "10px" }}>{Math.round(percent)}%</spam>
-              );
-            }}
-          />
-        );
-      }
-    },
-    {
-      title: "Result",
-      width: "25%",
+      title: page_texts.userAnswer.replace("{}", name),
+      dataIndex: "choiceImage",
+      key: "choiceImage",
+      className: "antColor",
+      sorter: (a, b) => a.choiceImage - b.choiceImage,
       align: "center",
-      render: (text, record) => {
+      render: (choiceImage, record) => {
+        let backColor = "red";
+        if (record.correct) backColor = "green";
         return (
-          <Link to={`/detailResult/${uuid}/${record.id}`}>
-            <Button>Result</Button>
-          </Link>
+          <div className="answerImage" style={{ backgroundColor: backColor }}>
+            <img
+              className="detailSurveyImage"
+              alt=""
+              src={HOSTNAME + choiceImage}
+            />
+          </div>
         );
       }
     }
   ];
   return columns;
 }
-class ResultSurvey extends Component {
+class DetailResult extends Component {
   state = {
     access: false
   };
@@ -94,10 +73,14 @@ class ResultSurvey extends Component {
     message.success(msg);
   };
 
+  createDataSource = id => {
+    console.log(id);
+  };
+
   render() {
     const localhost = window.location.hostname;
     const general_texts = T[this.props.language];
-    const page_texts = T[this.props.language].resultSurvey;
+    const page_texts = T[this.props.language].detailResult;
 
     let rtl_support = null;
     if (this.props.language === "fa") {
@@ -128,15 +111,53 @@ class ResultSurvey extends Component {
         </div>
       );
 
+    console.log("allStatistics", this.props.statistics);
+    if (this.props.statistics.answers.length <= 0)
+      return <p> There is no answerer</p>;
+
+    const detailAnswer = this.props.statistics.answers.filter(answer => {
+      return answer.id == this.props.match.params.pk;
+    })[0];
+    console.log("detailAnswer", detailAnswer);
+    const answers = JSON.parse(detailAnswer.answers);
+
+    // This reduce create a list of objects that include questionText and correspond user answer image for example:
+    // [{question: "TEXT", choiceImage: "IMAGE ADDRESS"}, ...]
+
+    const dataSource = answers.reduce((prev, cur) => {
+      const questionChoices = this.props.statistics.questions[cur.questionIndex]
+        .choices;
+
+      console.log("quesitonChoices", questionChoices);
+      const userChoice = questionChoices.filter(
+        choice => choice.id === cur.choice
+      )[0];
+
+      console.log("userChoice", userChoice);
+
+      prev.push({
+        question: this.props.statistics.questions[cur.questionIndex].name,
+        choiceImage: userChoice.image,
+        correct: cur.correct
+      });
+      return prev;
+    }, []);
+
     return (
       <Hoc>
         <div>
+          <h4 align="center">{detailAnswer.name}</h4>
+          <hr />
           <Row>
             <Col>
               <Table
                 pagination={{ pageSize: 5 }}
-                dataSource={this.props.statistics.answers}
-                columns={renderColumn(page_texts, this.props.statistics.uuid)}
+                dataSource={dataSource}
+                columns={renderColumn(
+                  page_texts,
+                  detailAnswer.name,
+                  this.props.statistics.lang
+                )}
               />
             </Col>
           </Row>
@@ -159,14 +180,8 @@ class ResultSurvey extends Component {
               >{`http://${localhost}/su/${this.props.statistics.uuid}`}</textarea>
               <hr />
               <div align="center">
-                <p>
-                  {page_texts.totalQuestionTxt} :{" "}
-                  {this.props.statistics.total_questions}
-                </p>
-                <p>
-                  {page_texts.totalParticipantsTxt}:{" "}
-                  {this.props.statistics.participant_count}
-                </p>
+                <p>برای دیدن آنلالیز تخصیصی ۲۰۰۰ هزار تومن پرداخت کنید</p>
+                <button>پرداخت</button>
               </div>
             </Col>
           </Row>
@@ -196,5 +211,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ResultSurvey)
+  )(DetailResult)
 );

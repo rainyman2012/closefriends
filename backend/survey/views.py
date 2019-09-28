@@ -36,6 +36,11 @@ class StatisticViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewset
     queryset = Survey.objects.all()
     lookup_field = 'uuid'
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        translation.activate(instance.lang)
+        return super().retrieve(request, *args, **kwargs)
+
 
 # class StatisticViewSet(viewsets.ModelViewSet):
 

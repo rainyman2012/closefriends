@@ -3,7 +3,7 @@ from survey.models import Question, Target
 
 
 class QuestionTranslationOptions(TranslationOptions):
-    fields = ('name', 'ask')
+    fields = ('name', 'ask', 'analyze')
 
 
 class TargetTranslationOptions(TranslationOptions):

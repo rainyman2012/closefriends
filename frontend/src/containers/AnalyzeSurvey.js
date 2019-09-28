@@ -1,76 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import Hoc from "../hoc/hoc";
 import { getStatisticsData } from "../store/actions/statistics";
-import { Button, Row, Col, Spin } from "antd";
-import { Table, Progress, message } from "antd";
+import { Collapse, message, Row, Col, Spin } from "antd";
 import Cookies from "universal-cookie";
+import "../stylesheets/DetailResult.css";
 import { Lang as T } from "../languages";
 
-function renderColumn(page_texts, uuid) {
-  const columns = [
-    {
-      title: page_texts.nameColumn,
-      dataIndex: "name",
-      key: "name",
-      width: "25%",
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"]
-    },
-    {
-      title: page_texts.answerColumn,
-      dataIndex: "total_correct",
-      width: "25%",
+const { Panel } = Collapse;
 
-      key: "total_correct",
-      sorter: (a, b) => a.total_correct - b.total_correct,
-      align: "center"
-    },
-
-    {
-      title: page_texts.percentageColumn,
-      dataIndex: "correct_percentage",
-      width: "25%",
-      key: "total_percentage",
-      sorter: (a, b) => a.correct_percentage - b.correct_percentage,
-      align: "left",
-      render: correct_percentage => {
-        let custom_color = "";
-        if (correct_percentage >= 50) custom_color = "green";
-        else custom_color = "red";
-
-        return (
-          <Progress
-            type="circle"
-            percent={correct_percentage}
-            width={40}
-            strokeColor={custom_color}
-            format={percent => {
-              return (
-                <spam style={{ fontSize: "10px" }}>{Math.round(percent)}%</spam>
-              );
-            }}
-          />
-        );
-      }
-    },
-    {
-      title: "Result",
-      width: "25%",
-      align: "center",
-      render: (text, record) => {
-        return (
-          <Link to={`/detailResult/${uuid}/${record.id}`}>
-            <Button>Result</Button>
-          </Link>
-        );
-      }
-    }
-  ];
-  return columns;
-}
-class ResultSurvey extends Component {
+class AnalyzeSurvey extends Component {
   state = {
     access: false
   };
@@ -94,17 +34,24 @@ class ResultSurvey extends Component {
     message.success(msg);
   };
 
+  createDataSource = id => {
+    console.log(id);
+  };
+
   render() {
     const localhost = window.location.hostname;
     const general_texts = T[this.props.language];
-    const page_texts = T[this.props.language].resultSurvey;
+    const page_texts = T[this.props.language].detailResult;
 
     let rtl_support = null;
+    let expandIconPosition = "left";
     if (this.props.language === "fa") {
+      expandIconPosition = "right";
       rtl_support = {
         textAlign: "right"
       };
     }
+
     if (!this.state.access) {
       return (
         <div style={{ textAlign: "center" }}>
@@ -128,16 +75,70 @@ class ResultSurvey extends Component {
         </div>
       );
 
+    console.log("allStatistics", this.props.statistics);
+    if (this.props.statistics.answers.length <= 0)
+      return <p> There is no answerer</p>;
+
+    const detailAnswer = this.props.statistics.answers.filter(answer => {
+      return answer.id == this.props.match.params.pk;
+    })[0];
+    console.log("detailAnswer", detailAnswer);
+    const answers = JSON.parse(detailAnswer.answers);
+
+    // This reduce create a list of objects that include questionText and correspond user answer image for example:
+    // [{question: "TEXT", choiceImage: "IMAGE ADDRESS"}, ...]
+
+    const dataSource = answers.reduce((prev, cur) => {
+      const questionChoices = this.props.statistics.questions[cur.questionIndex]
+        .choices;
+
+      console.log("quesitonChoices", questionChoices);
+      const userChoice = questionChoices.filter(
+        choice => choice.id === cur.choice
+      )[0];
+
+      console.log("userChoice", userChoice);
+      const temp = this.props.statistics.questions[
+        cur.questionIndex
+      ].analyze.replace(/'/g, '"');
+
+      const parsedAnalyzeField = JSON.parse(temp)[0];
+      prev.push({
+        key: cur.questionIndex,
+        question: this.props.statistics.questions[cur.questionIndex].name,
+        shortDescAnalyze: parsedAnalyzeField.short,
+        longDescAnalyze: parsedAnalyzeField.long,
+        correct: cur.correct
+      });
+      return prev;
+    }, []);
+
+    console.log("dataSource", dataSource);
+
     return (
       <Hoc>
         <div>
+          Ehsan
+          <h4 align="center">{detailAnswer.name}</h4>
+          <hr />
           <Row>
             <Col>
-              <Table
-                pagination={{ pageSize: 5 }}
-                dataSource={this.props.statistics.answers}
-                columns={renderColumn(page_texts, this.props.statistics.uuid)}
-              />
+              <Collapse accordion expandIconPosition={expandIconPosition}>
+                {dataSource.map(data => {
+                  return (
+                    <Panel
+                      key={data.key}
+                      header={React.createElement(
+                        "p",
+                        { style: rtl_support },
+                        data.shortDescAnalyze
+                      )}
+                    >
+                      <p style={rtl_support}>{data.longDescAnalyze}</p>
+                    </Panel>
+                  );
+                })}
+              </Collapse>
             </Col>
           </Row>
           <Row type="flex" justify="center" style={{ marginTop: "10px" }}>
@@ -158,16 +159,6 @@ class ResultSurvey extends Component {
                 }
               >{`http://${localhost}/su/${this.props.statistics.uuid}`}</textarea>
               <hr />
-              <div align="center">
-                <p>
-                  {page_texts.totalQuestionTxt} :{" "}
-                  {this.props.statistics.total_questions}
-                </p>
-                <p>
-                  {page_texts.totalParticipantsTxt}:{" "}
-                  {this.props.statistics.participant_count}
-                </p>
-              </div>
             </Col>
           </Row>
         </div>
@@ -196,5 +187,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ResultSurvey)
+  )(AnalyzeSurvey)
 );

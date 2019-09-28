@@ -1,5 +1,10 @@
 const Lang = {
   fa: {
+    detailResult: {
+      userAnswer: "جواب {}",
+      question: "سوال"
+    },
+
     precreate: {
       create: "به منظور ساخت آزمون ,نام و زبان و جنسیت خود را وارد کنید",
       enterYourName: "نام خود را وارد کنید",
@@ -74,6 +79,11 @@ const Lang = {
   },
 
   en: {
+    detailResult: {
+      userAnswer: "{}'s answer",
+      question: "Question"
+    },
+
     precreate: {
       create: "To start creating your survey fill out fields below",
       enterYourName: "Enter Your Name",

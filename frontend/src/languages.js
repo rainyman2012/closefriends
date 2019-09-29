@@ -77,7 +77,8 @@ const Lang = {
       commonOpinion: "دوست شما با شما هم نظر است",
       unCommonOpinion: "دوست شما با شما هم نظر نیست",
       answer: "جواب {}",
-      copied: "کپی شد"
+      copied: "کپی شد",
+      your: "شما"
     },
     languageName: "فارسی",
     serverError: "مشکلی از سمت سرور پیش آمده  لطفا لحاظاتی بعد مجدد تلاش کنید.",
@@ -166,7 +167,8 @@ const Lang = {
       commonOpinion: "Your friend have a common opinion with you",
       unCommonOpinion: "Your friend do not have a common opinion with you",
       answer: "{}'s answer",
-      copied: "Copied"
+      copied: "Copied",
+      your: "your"
     },
     languageName: "English",
     serverError:

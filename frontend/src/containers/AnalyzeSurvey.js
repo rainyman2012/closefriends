@@ -197,7 +197,9 @@ class AnalyzeSurvey extends Component {
                             textAlign: "center"
                           }}
                         >
-                          <p>{page_texts.answer.replace("{}", "شما")}</p>
+                          <p>
+                            {page_texts.answer.replace("{}", page_texts.your)}
+                          </p>
                           <img
                             className="analyzeSurveyImage"
                             alt=""

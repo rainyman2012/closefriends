@@ -127,6 +127,7 @@ class SurveyViewSet(viewsets.ModelViewSet):
                 answers[question]['correct'] = True
             else:
                 answers[question]['correct'] = False
+            answers[question]['realAns'] = real_answers[question]['choice']
 
         return total_correct_answer
 

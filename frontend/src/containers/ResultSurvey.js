@@ -21,8 +21,7 @@ function renderColumn(page_texts, uuid) {
     {
       title: page_texts.answerColumn,
       dataIndex: "total_correct",
-      width: "25%",
-
+      width: "15%",
       key: "total_correct",
       sorter: (a, b) => a.total_correct - b.total_correct,
       align: "center"
@@ -57,12 +56,20 @@ function renderColumn(page_texts, uuid) {
     },
     {
       title: "Result",
-      width: "25%",
+      width: "10%",
       align: "center",
       render: (text, record) => {
         return (
-          <Link to={`/detailResult/${uuid}/${record.id}`}>
-            <Button>Result</Button>
+          <Link
+            to={`/detailResult/${uuid}/${record.id}`}
+            style={{
+              backgroundColor: "green",
+              color: "black",
+              padding: "5px",
+              borderRadius: "5px"
+            }}
+          >
+            Result
           </Link>
         );
       }

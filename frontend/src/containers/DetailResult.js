@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import Hoc from "../hoc/hoc";
 import { getStatisticsData } from "../store/actions/statistics";
 import { Button, Row, Col, Spin } from "antd";
@@ -180,8 +180,20 @@ class DetailResult extends Component {
               >{`http://${localhost}/su/${this.props.statistics.uuid}`}</textarea>
               <hr />
               <div align="center">
-                <p>برای دیدن آنلالیز تخصیصی ۲۰۰۰ هزار تومن پرداخت کنید</p>
-                <button>پرداخت</button>
+                {this.props.statistics.is_paid ? (
+                  <Link
+                    to={`/analyze/${this.props.statistics.uuid}/${this.props.match.params.pk}`}
+                  >
+                    <Button>{page_texts.analyze}</Button>
+                  </Link>
+                ) : (
+                  <React.Fragment>
+                    <p style={{ align: "center" }}>
+                      {page_texts.adv_to_payment}
+                    </p>
+                    <button>{page_texts.payment}</button>
+                  </React.Fragment>
+                )}
               </div>
             </Col>
           </Row>

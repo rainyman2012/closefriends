@@ -84,11 +84,15 @@ class StatisticSerializer(serializers.ModelSerializer):
     participant_count = serializers.SerializerMethodField()
     total_questions = serializers.SerializerMethodField()
     questions = serializers.SerializerMethodField()
+    is_paid = serializers.SerializerMethodField()
 
     class Meta:
         model = Survey
         fields = ('name', 'uuid', 'questions', 'answers',
-                  'participant_count', 'total_questions', 'lang')
+                  'participant_count', 'total_questions', 'lang', 'is_paid')
+
+    def get_is_paid(self, obj):
+        return True
 
     def get_answers(self, obj):
         queryset = obj.answer_set.all()

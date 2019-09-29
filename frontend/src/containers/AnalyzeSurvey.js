@@ -5,8 +5,9 @@ import Hoc from "../hoc/hoc";
 import { getStatisticsData } from "../store/actions/statistics";
 import { Collapse, message, Row, Col, Spin } from "antd";
 import Cookies from "universal-cookie";
-import "../stylesheets/DetailResult.css";
+import "../stylesheets/AnalyzeSurvey.css";
 import { Lang as T } from "../languages";
+import { HOSTNAME } from "../static";
 
 const { Panel } = Collapse;
 
@@ -41,7 +42,7 @@ class AnalyzeSurvey extends Component {
   render() {
     const localhost = window.location.hostname;
     const general_texts = T[this.props.language];
-    const page_texts = T[this.props.language].detailResult;
+    const page_texts = T[this.props.language].analyzeSurvey;
 
     let rtl_support = null;
     let expandIconPosition = "left";
@@ -82,6 +83,7 @@ class AnalyzeSurvey extends Component {
     const detailAnswer = this.props.statistics.answers.filter(answer => {
       return answer.id == this.props.match.params.pk;
     })[0];
+
     console.log("detailAnswer", detailAnswer);
     const answers = JSON.parse(detailAnswer.answers);
 
@@ -96,18 +98,44 @@ class AnalyzeSurvey extends Component {
       const userChoice = questionChoices.filter(
         choice => choice.id === cur.choice
       )[0];
-
       console.log("userChoice", userChoice);
+
+      const adminChoice = questionChoices.filter(
+        choice => choice.id === cur.realAns
+      )[0];
+      const userIndex = questionChoices.findIndex(
+        choice => choice === userChoice
+      );
+      const adminIndex = questionChoices.findIndex(
+        choice => choice === adminChoice
+      );
+
+      console.log("adminChoice", userChoice);
+
       const temp = this.props.statistics.questions[
         cur.questionIndex
-      ].analyze.replace(/'/g, '"');
+      ].analyze.replace(/'/g, '"'); // For adapting to RFC 4627 we must convert all single quotes to double quotes
 
-      const parsedAnalyzeField = JSON.parse(temp)[0];
+      const parsedAnalyzeField = JSON.parse(temp);
+      console.log("parsed analyzed", parsedAnalyzeField);
+
       prev.push({
         key: cur.questionIndex,
         question: this.props.statistics.questions[cur.questionIndex].name,
-        shortDescAnalyze: parsedAnalyzeField.short,
-        longDescAnalyze: parsedAnalyzeField.long,
+        userShortDescAnalyze: parsedAnalyzeField[userIndex]
+          ? parsedAnalyzeField[userIndex].short
+          : null,
+        userLongDescAnalyze: parsedAnalyzeField[userIndex]
+          ? parsedAnalyzeField[userIndex].long
+          : null,
+        adminShortDescAnalyze: parsedAnalyzeField[adminIndex]
+          ? parsedAnalyzeField[adminIndex].short
+          : null,
+        adminLongDescAnalyze: parsedAnalyzeField[adminIndex]
+          ? parsedAnalyzeField[adminIndex].long
+          : null,
+        userChoiceImage: userChoice.image,
+        adminChoiceImage: adminChoice.image,
         correct: cur.correct
       });
       return prev;
@@ -118,7 +146,8 @@ class AnalyzeSurvey extends Component {
     return (
       <Hoc>
         <div>
-          Ehsan
+          <h4 align="center"></h4>
+
           <h4 align="center">{detailAnswer.name}</h4>
           <hr />
           <Row>
@@ -131,10 +160,83 @@ class AnalyzeSurvey extends Component {
                       header={React.createElement(
                         "p",
                         { style: rtl_support },
-                        data.shortDescAnalyze
+                        data.question
                       )}
                     >
-                      <p style={rtl_support}>{data.longDescAnalyze}</p>
+                      {data.correct ? (
+                        <div
+                          style={{
+                            textAlign: "center"
+                          }}
+                        >
+                          <img
+                            className="analyzeSurveyImage"
+                            alt=""
+                            src={HOSTNAME + data.userChoiceImage}
+                          />
+                          <hr />
+                          <p style={rtl_support}>{data.userShortDescAnalyze}</p>
+                          <hr />
+                          <p style={rtl_support}>{data.userLongDescAnalyze}</p>
+                          <hr />
+                          <div
+                            style={{
+                              backgroundColor: "green",
+                              height: "50px",
+                              textAlign: "center"
+                            }}
+                          >
+                            <p style={{ position: "relative", top: "25%" }}>
+                              {page_texts.commonOpinion}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            textAlign: "center"
+                          }}
+                        >
+                          <p>{page_texts.answer.replace("{}", "شما")}</p>
+                          <img
+                            className="analyzeSurveyImage"
+                            alt=""
+                            src={HOSTNAME + data.adminChoiceImage}
+                          />
+                          <hr />
+                          <p style={rtl_support}>
+                            {data.adminShortDescAnalyze}
+                          </p>
+                          <hr />
+                          <p style={rtl_support}>{data.adminLongDescAnalyze}</p>
+                          <hr />
+                          <p>
+                            {page_texts.answer.replace("{}", detailAnswer.name)}
+                          </p>
+
+                          <img
+                            className="analyzeSurveyImage"
+                            alt=""
+                            src={HOSTNAME + data.userChoiceImage}
+                          />
+                          <hr />
+                          <p style={rtl_support}>{data.userShortDescAnalyze}</p>
+                          <hr />
+                          <p style={rtl_support}>{data.userLongDescAnalyze}</p>
+                          <hr />
+                          <div
+                            style={{
+                              backgroundColor: "red",
+                              height: "50px",
+                              textAlign: "center"
+                            }}
+                          >
+                            <p style={{ position: "relative", top: "25%" }}>
+                              {page_texts.unCommonOpinion}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </Panel>
                   );
                 })}

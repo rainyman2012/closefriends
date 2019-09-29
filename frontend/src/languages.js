@@ -1,10 +1,5 @@
 const Lang = {
   fa: {
-    detailResult: {
-      userAnswer: "جواب {}",
-      question: "سوال"
-    },
-
     precreate: {
       create: "به منظور ساخت آزمون ,نام و زبان و جنسیت خود را وارد کنید",
       enterYourName: "نام خود را وارد کنید",
@@ -67,7 +62,23 @@ const Lang = {
         "تنها شما می تواند با استفاده از همین لینک نتیجه تا به الان را ببینید",
       copied: "کپی شد"
     },
+    detailResult: {
+      userAnswer: "جواب {}",
+      question: "سوال",
+      adv_to_payment:
+        "باپرداخت تنها ۲۰۰۰ تومان آنالیز تخصیصی جواب دوست خود را ببینید",
+      payment: "پرداخت",
+      analyze: "آنالیز",
+      copied: "کپی شد"
+    },
 
+    analyzeSurvey: {
+      analyze: "آنالیز",
+      commonOpinion: "دوست شما با شما هم نظر است",
+      unCommonOpinion: "دوست شما با شما هم نظر نیست",
+      answer: "جواب {}",
+      copied: "کپی شد"
+    },
     languageName: "فارسی",
     serverError: "مشکلی از سمت سرور پیش آمده  لطفا لحاظاتی بعد مجدد تلاش کنید.",
     loading: "در حال خواندن اطلاعات",
@@ -79,11 +90,6 @@ const Lang = {
   },
 
   en: {
-    detailResult: {
-      userAnswer: "{}'s answer",
-      question: "Question"
-    },
-
     precreate: {
       create: "To start creating your survey fill out fields below",
       enterYourName: "Enter Your Name",
@@ -144,6 +150,22 @@ const Lang = {
       totalQuestionTxt: "Total question",
       totalParticipantsTxt: "Total participants",
       toResult: "You can only see this result from this link",
+      copied: "Copied"
+    },
+    detailResult: {
+      userAnswer: "{}'s answer",
+      question: "Question",
+      adv_to_payment: "Just with 2$ you see your friends' analyze ",
+      payment: "payment",
+      analyze: "Analyze",
+      copied: "Copied"
+    },
+
+    analyzeSurvey: {
+      analyze: "Analyze",
+      commonOpinion: "Your friend have a common opinion with you",
+      unCommonOpinion: "Your friend do not have a common opinion with you",
+      answer: "{}'s answer",
       copied: "Copied"
     },
     languageName: "English",

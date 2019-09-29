@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as actionType from "./actionTypes";
 import { HOSTNAME } from "../../static";
+import { setLanguage } from "./general";
 
 //==================================================== Statistics
 
@@ -40,6 +41,7 @@ export const getStatisticsData = uuid => {
       .then(res => {
         const statistic = res.data;
         dispatch(statisticsSuccessReceived(statistic, "admin"));
+        dispatch(setLanguage(statistic.lang));
       })
       .catch(err => {
         dispatch(statisticsFail(err));

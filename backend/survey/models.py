@@ -4,6 +4,8 @@ import uuid
 import base64
 from PIL import Image
 
+from django.db.models import Q
+
 
 def generate_uuid():
     _uuid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
@@ -80,14 +82,15 @@ class SurveyManager(models.Manager):
 
     def create(self, **kwargs):
         obj = super().create(**kwargs)
-        rand_question = self.get_random_questions(5)
+        rand_question = self.get_random_questions(15, obj)
         obj.questions.set(rand_question)
         obj.save()
         return obj
 
-    def get_random_questions(self, num):
+    def get_random_questions(self, num, obj):
         import random
-        id_list = Question.objects.values_list('id', flat=True).order_by('id')
+        id_list = Question.objects.filter(
+            Q(sex__exact=obj.sex) | Q(sex__isnull=True)).values_list('id', flat=True).order_by('id')
         random_id_list = random.sample(list(id_list), min(len(id_list), num))
         query_set = Question.objects.filter(id__in=random_id_list)
         return query_set

@@ -106,7 +106,7 @@ class StatisticSerializer(serializers.ModelSerializer):
         return obj.questions.filter(Q(sex__exact=obj.sex) | Q(sex__isnull=True)).count()
 
     def get_questions(self, obj):
-        queryset = Question.objects.filter(
+        queryset = obj.questions.filter(
             Q(sex__exact=obj.sex) | Q(sex__isnull=True))
         questions = QuestionSerializer(queryset, many=True, read_only=True)
         return questions.data
@@ -127,7 +127,7 @@ class SurveySerializer(serializers.ModelSerializer):
         }
 
     def get_questions(self, obj):
-        queryset = Question.objects.filter(
+        queryset = obj.questions.filter(
             Q(sex__exact=obj.sex) | Q(sex__isnull=True))
         questions = QuestionSerializer(queryset, many=True, read_only=True)
         return questions.data

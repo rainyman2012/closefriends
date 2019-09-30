@@ -156,11 +156,12 @@ class CustomLayout extends React.Component {
               <Icon type="instagram" />
             </a>
             {" | "}
-            <a
-              style={{ fontSize: "20px" }}
-              href="https://www.linkedin.com/in/ehsan-ahmadi-5b3459101/"
-            >
-              <Icon type="linkedin" />
+            <a style={{ fontSize: "20px" }} href="#">
+              <i className="fa fa-whatsapp"></i>
+            </a>
+            {" | "}
+            <a style={{ fontSize: "20px" }} href="#">
+              <i className="fa fa-telegram"></i>
             </a>
             <p style={{ marginTop: "5px" }}>
               If you like to be a contributor to this project you can checkout
@@ -170,7 +171,9 @@ class CustomLayout extends React.Component {
               style={{ fontSize: "20px" }}
               href="https://github.com/rainyman2012/closefriends"
             >
-              <Icon type="github" />
+              <div>
+                <i className="fa fa-github"></i>
+              </div>
             </a>
           </p>
         </Footer>

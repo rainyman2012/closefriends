@@ -95,8 +95,15 @@ class SurveyManager(models.Manager):
         import random
         id_list = Question.objects.filter(
             Q(sex__exact=obj.sex) | Q(sex__isnull=True)).values_list('id', flat=True).order_by('id')
-        random_id_list = random.sample(list(id_list), min(len(id_list), num))
-        query_set = Question.objects.filter(id__in=random_id_list)
+        cat1 = list(id_list)[0:17]
+        cat2 = list(id_list)[17:]
+        random_cat1_list = random.sample(
+            list(cat1), k=min(len(cat1), 11))
+        random_cat2_list = random.sample(
+            list(cat2), k=min(len(cat2), 4))
+        final_random_list = random_cat1_list + random_cat2_list
+        query_set = Question.objects.filter(
+            id__in=final_random_list)
         return query_set
 
     def get_model_fields(self):

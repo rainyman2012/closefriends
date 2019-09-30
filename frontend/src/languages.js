@@ -75,7 +75,8 @@ const Lang = {
       totalParticipantsTxt: "مجموع شرکت کنندگان",
       toResult:
         "تنها شما می تواند با استفاده از همین لینک نتیجه تا به الان را ببینید",
-      copied: "کپی شد"
+      copied: "کپی شد",
+      detail: "جزئیات"
     },
     detailResult: {
       userAnswer: "جواب {}",
@@ -180,7 +181,8 @@ const Lang = {
       totalQuestionTxt: "Total question",
       totalParticipantsTxt: "Total participants",
       toResult: "You can only see this result from this link",
-      copied: "Copied"
+      copied: "Copied",
+      detail: "Detail"
     },
     detailResult: {
       userAnswer: "{}'s answer",

@@ -4,9 +4,8 @@ import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import App from "./App";
-import "semantic-ui-css/semantic.min.css";
 import "antd/dist/antd.css";
-import "bootstrap/dist/css/bootstrap.css";
+
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
 import { createStore, compose, applyMiddleware, combineReducers } from "redux";
@@ -16,6 +15,7 @@ import thunk from "redux-thunk";
 import surveyReducer from "./store/reducers/survey";
 import statisticsReducer from "./store/reducers/statistics";
 import generalReducer from "./store/reducers/general";
+import "font-awesome/css/font-awesome.min.css";
 
 const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

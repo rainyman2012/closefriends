@@ -1,0 +1,16 @@
+        .SUCodeImage {
+            background: -moz-linear-gradient(45deg, #4D0000 0%, #FF0000 50%, #4D0000 100%);
+            /* ff3.6+ */
+            background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #4D0000), color-stop(50%, #FF0000), color-stop(100%, #4D0000));
+            /* safari4+,chrome */
+            background: -webkit-linear-gradient(45deg, #4D0000 0%, #FF0000 50%, #4D0000 100%);
+            /* safari5.1+,chrome10+ */
+            background: -o-linear-gradient(45deg, #4D0000 0%, #FF0000 50%, #4D0000 100%);
+            /* opera 11.10+ */
+            background: -ms-linear-gradient(45deg, #4D0000 0%, #FF0000 50%, #4D0000 100%);
+            /* ie10+ */
+            background: linear-gradient(45deg, #4D0000 0%, #FF0000 50%, #4D0000 100%);
+            /* w3c */
+            filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#4D0000', endColorstr='#4D0000', GradientType=1);
+            /* ie6-9 */
+        }

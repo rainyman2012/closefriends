@@ -43,7 +43,7 @@ class PreCreate extends Component {
     }
   };
 
-  componentWillMount() {
+  setLanguage() {
     let htmlElement = "";
     if (this.props.language === "fa") {
       document.body.style.fontFamily = "Amiri";
@@ -56,6 +56,11 @@ class PreCreate extends Component {
       htmlElement.dir = "ltr";
     }
   }
+
+  componentWillMount() {
+    this.setLanguage();
+  }
+
   handleLangMenuClick = e => {
     this.props.setLanguage(e.key);
 
@@ -207,7 +212,15 @@ class PreCreate extends Component {
               size={size}
               onClick={this.handleStartBtn}
             >
-              <Icon type="heart" theme="filled" style={{ color: "#eb2f96" }} />{" "}
+              <Icon
+                type="heart"
+                theme="filled"
+                style={{
+                  color: "#eb2f96",
+                  marginRight: "5px",
+                  marginLeft: "5px"
+                }}
+              />{" "}
               {page_texts.start}
             </Button>
           </Col>

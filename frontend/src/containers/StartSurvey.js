@@ -15,6 +15,20 @@ class StartSurvey extends Component {
     redirect_to: "",
     twiceAttendError: false
   };
+
+  setLanguage() {
+    let htmlElement = "";
+    if (this.props.language === "fa") {
+      document.body.style.fontFamily = "Amiri";
+
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "rtl";
+    } else {
+      document.body.style.fontFamily = "Indie Flower";
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "ltr";
+    }
+  }
   componentWillMount() {
     const cookies = new Cookies();
     const assignments = cookies.get("assignments");
@@ -29,6 +43,12 @@ class StartSurvey extends Component {
       const expired_list = expired.split(",");
       if (expired_list.includes(this.props.match.params.uuid))
         this.setState({ twiceAttendError: true });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.language !== prevProps.language) {
+      this.setLanguage();
     }
   }
 

@@ -55,7 +55,7 @@ function renderColumn(page_texts, uuid) {
       }
     },
     {
-      title: "Result",
+      title: page_texts.detail,
       width: "10%",
       align: "center",
       render: (text, record) => {
@@ -69,7 +69,7 @@ function renderColumn(page_texts, uuid) {
               borderRadius: "5px"
             }}
           >
-            Result
+            {page_texts.detail}
           </Link>
         );
       }
@@ -81,7 +81,19 @@ class ResultSurvey extends Component {
   state = {
     access: false
   };
+  setLanguage() {
+    let htmlElement = "";
+    if (this.props.language === "fa") {
+      document.body.style.fontFamily = "Amiri";
 
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "rtl";
+    } else {
+      document.body.style.fontFamily = "Indie Flower";
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "ltr";
+    }
+  }
   componentWillMount() {
     const cookies = new Cookies();
     const assignments = cookies.get("assignments");
@@ -100,6 +112,12 @@ class ResultSurvey extends Component {
     e.target.blur();
     message.success(msg);
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.language !== prevProps.language) {
+      this.setLanguage();
+    }
+  }
 
   render() {
     const localhost = window.location.hostname;

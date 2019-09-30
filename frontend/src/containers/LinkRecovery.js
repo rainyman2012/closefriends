@@ -8,6 +8,7 @@ import { HOSTNAME } from "../static";
 import { Input, Button, Icon, Row, Col, message } from "antd";
 import Hoc from "../hoc/hoc";
 import { Lang as T } from "../languages";
+import "../stylesheets/LinkRecovery.css";
 
 class LinkRecovery extends Component {
   state = {
@@ -101,9 +102,14 @@ class LinkRecovery extends Component {
       <Hoc>
         <Row type="flex" justify="center" style={{ marginBottom: "50px" }}>
           <Col>
-            <div>
+            <div style={{ textAlign: "center" }}>
               <h5 style={{ textAlign: "center" }}>{page_texts.caption}</h5>
-              عکس
+              <img
+                width="80%"
+                className="SUCodeImage"
+                src="http://localhost:8000/media/serial.png"
+                alt=""
+              />
             </div>
           </Col>
         </Row>

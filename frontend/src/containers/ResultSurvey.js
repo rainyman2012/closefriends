@@ -95,6 +95,7 @@ class ResultSurvey extends Component {
     }
   }
   componentWillMount() {
+    this.setLanguage();
     const cookies = new Cookies();
     const assignments = cookies.get("assignments");
     if (assignments && assignments === `EHS_${this.props.match.params.uuid}`)
@@ -158,11 +159,13 @@ class ResultSurvey extends Component {
         <div>
           <Row>
             <Col>
-              <Table
-                pagination={{ pageSize: 5 }}
-                dataSource={this.props.statistics.answers}
-                columns={renderColumn(page_texts, this.props.statistics.uuid)}
-              />
+              <div dir="LTR">
+                <Table
+                  pagination={{ pageSize: 5 }}
+                  dataSource={this.props.statistics.answers}
+                  columns={renderColumn(page_texts, this.props.statistics.uuid)}
+                />
+              </div>
             </Col>
           </Row>
           <Row type="flex" justify="center" style={{ marginTop: "10px" }}>

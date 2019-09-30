@@ -150,15 +150,17 @@ class DetailResult extends Component {
           <hr />
           <Row>
             <Col>
-              <Table
-                pagination={{ pageSize: 5 }}
-                dataSource={dataSource}
-                columns={renderColumn(
-                  page_texts,
-                  detailAnswer.name,
-                  this.props.statistics.lang
-                )}
-              />
+              <div dir="LTR">
+                <Table
+                  pagination={{ pageSize: 5 }}
+                  dataSource={dataSource}
+                  columns={renderColumn(
+                    page_texts,
+                    detailAnswer.name,
+                    this.props.statistics.lang
+                  )}
+                />
+              </div>
             </Col>
           </Row>
           <Row type="flex" justify="center" style={{ marginTop: "10px" }}>

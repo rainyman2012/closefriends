@@ -1,7 +1,18 @@
 const Lang = {
   fa: {
+    linkRecovery: {
+      enterYourPassword: "رمز خود را وارد کنید",
+      recover: "بازیابی لینک",
+      enterYourSuCode: "شناسه‌‌ی آزمون خود را وارد کنید",
+      enterSuCodeErrorTxt: "وارد کردن کد الزامی است",
+      enterPasswordErrorTxt: "وارد کردن رمز الزامی است",
+      caption: "بازگردانی دسترسی به صفحه‌ی مدیریت",
+      successfulRecovery:
+        "دسترسی شما بازگشت. لطفا لینک زیر را در همین مرورگر باز کنید",
+      back: "بازگشت"
+    },
     precreate: {
-      create: "به منظور ساخت آزمون ,نام و زبان و جنسیت خود را وارد کنید",
+      create: "به منظور ساخت آزمون, نام، جنسیت و یک رمز وارد کنید",
       enterYourName: "نام خود را وارد کنید",
       start: "شروع",
       enterNameErrorTxt: "این فیلد نباید خالی باشد",
@@ -9,7 +20,11 @@ const Lang = {
       male: "پسر",
       female: "دختر",
       bisexual: "دگر جنس گرا",
-      sex: "جنسیت"
+      sex: "جنسیت",
+      enterYourPassword: "رمز دلخواه خود را وارد کنید",
+      enterPasswordErrorTxt:
+        "لطفا جهت بازیابی صفحه‌ی مدیریت خود یک  رمز انتخاب کنید",
+      recovery: "بازیابی دسترسی به صفحه‌ مدیریت"
     },
     thankful: {
       thanks: "{} بابت شرکت در این آزمون  تشکر ",
@@ -91,6 +106,17 @@ const Lang = {
   },
 
   en: {
+    linkRecovery: {
+      enterYourPassword: "Enter Your Password",
+      recover: "Recover",
+      enterYourSuCode: "Enter Your SU Code ",
+      enterSuCodeErrorTxt: "Entering your SU Code is required",
+      enterPasswordErrorTxt: "Entering your password is required",
+      caption: "Access Recovery",
+      successfulRecovery:
+        "Your link successfully recovered. Open link below in this browser",
+      back: "Back"
+    },
     precreate: {
       create: "To start creating your survey fill out fields below",
       enterYourName: "Enter Your Name",
@@ -101,7 +127,10 @@ const Lang = {
       male: "Male",
       female: "Female",
       bisexual: "BiSexual",
-      sex: "Sex"
+      sex: "Sex",
+      enterYourPassword: "Enter Your Password",
+      enterPasswordErrorTxt: "In order to recover your link enter a password",
+      recovery: "Recover Admin Page"
     },
     thankful: {
       thanks: "Thank you {} for your attending",

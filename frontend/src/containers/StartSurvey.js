@@ -94,6 +94,16 @@ class StartSurvey extends Component {
         </div>
       );
 
+    if (this.props.language === "fa") {
+      document.body.style.fontFamily = "Amiri";
+      let htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "rtl";
+    } else {
+      document.body.style.fontFamily = "Indie Flower";
+      let htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "ltr";
+    }
+
     let rtl_support = null;
     if (this.props.language === "fa") {
       rtl_support = {

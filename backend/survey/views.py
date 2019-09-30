@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 import json
 from pudb import set_trace
-
 # from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -28,7 +27,30 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from django.utils import translation
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
+
+
+class VerifiedPasswordView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(VerifiedPasswordView, self).dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        verified = False
+        if data['password'] and data['uuid']:
+            verified = Survey.objects.verify_password(
+                data['password'], data['uuid'])
+        json = JSONRenderer().render(verified)
+
+        return HttpResponse(json)
 
 
 class StatisticViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { createSurvey } from "../store/actions/survey";
 import { setLanguage } from "../store/actions/general";
 import { Input, Button, Icon, Row, Col, Spin } from "antd";
@@ -14,30 +14,60 @@ class PreCreate extends Component {
     size: "large",
     enterNameError: false,
     enterSexError: false,
+    enterPasswordError: false,
     sex: ""
   };
 
   handleStartBtn = e => {
     const name = document.getElementById("nameInput").value;
-    let state = { enterNameError: false, enterSexError: false };
-
+    const password = document.getElementById("passwordInput").value;
+    let state = {
+      enterNameError: false,
+      enterSexError: false,
+      enterPasswordError: false
+    };
+    if (!password) state.enterPasswordError = true;
     if (!name) state.enterNameError = true;
-
     if (!this.state.sex) state.enterSexError = true;
 
     this.setState(state);
 
     if (!state.enterNameError && !state.enterSexError) {
-      this.props.createSurvey(name, this.props.language, this.state.sex);
+      this.props.createSurvey(
+        name,
+        this.props.language,
+        this.state.sex,
+        password
+      );
       this.props.history.push("/polling");
     }
   };
 
+  componentWillMount() {
+    let htmlElement = "";
+    if (this.props.language === "fa") {
+      document.body.style.fontFamily = "Amiri";
+
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "rtl";
+    } else {
+      document.body.style.fontFamily = "Indie Flower";
+      htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "ltr";
+    }
+  }
   handleLangMenuClick = e => {
     this.props.setLanguage(e.key);
 
-    if (e.key === "en") document.body.style.fontFamily = "Indie Flower";
-    else document.body.style.fontFamily = "Amiri";
+    if (e.key === "en") {
+      document.body.style.fontFamily = "Indie Flower";
+      let htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "ltr";
+    } else {
+      document.body.style.fontFamily = "Amiri";
+      let htmlElement = document.getElementsByTagName("html")[0];
+      htmlElement.dir = "rtl";
+    }
   };
 
   handleSexMenuClick = e => {
@@ -153,9 +183,24 @@ class PreCreate extends Component {
             )}
           </Col>
         </Row>
-
+        <Row type="flex" justify="center" style={{ marginTop: "25px" }}>
+          <Col span={22}>
+            <Input.Password
+              style={{ ...errorStyle, ...rtl_support }}
+              id="passwordInput"
+              placeholder={page_texts.enterYourPassword}
+            />
+            {this.state.enterPasswordError ? (
+              <p style={{ ...{ color: "#ffffff" }, ...rtl_support }}>
+                {page_texts.enterPasswordErrorTxt}
+              </p>
+            ) : (
+              ""
+            )}
+          </Col>
+        </Row>
         <Row style={{ marginTop: "50px" }} type="flex" justify="center">
-          <Col span={12}>
+          <Col span={22}>
             <Button
               type="primary"
               style={{ width: "100%" }}
@@ -165,6 +210,16 @@ class PreCreate extends Component {
               <Icon type="heart" theme="filled" style={{ color: "#eb2f96" }} />{" "}
               {page_texts.start}
             </Button>
+          </Col>
+        </Row>
+
+        <Row style={{ marginTop: "10px" }} type="flex" justify="center">
+          <Col span={22}>
+            <Link to="/recovery">
+              <Button type="primary" style={{ width: "100%" }} size={size}>
+                {page_texts.recovery}
+              </Button>
+            </Link>
           </Col>
         </Row>
       </Hoc>
@@ -181,7 +236,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    createSurvey: (name, lang, sex) => dispatch(createSurvey(name, lang, sex)),
+    createSurvey: (name, lang, sex, password) =>
+      dispatch(createSurvey(name, lang, sex, password)),
     setLanguage: language => dispatch(setLanguage(language))
   };
 };

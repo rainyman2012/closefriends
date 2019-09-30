@@ -81,8 +81,8 @@ class CustomLayout extends React.Component {
                 padding: "5px"
               }}
             >
-              <ul id="color_list">
-                <li>
+              <div id="color_list">
+                <span>
                   <a
                     class="my_btn"
                     style={user_color_aqua}
@@ -91,8 +91,8 @@ class CustomLayout extends React.Component {
                       this.changeColorHandler(event, "aqua");
                     }}
                   />
-                </li>
-                <li>
+                </span>
+                <span>
                   <a
                     class="my_btn"
                     style={user_color_red}
@@ -101,8 +101,8 @@ class CustomLayout extends React.Component {
                       this.changeColorHandler(event, "red");
                     }}
                   />
-                </li>
-                <li>
+                </span>
+                <span>
                   <a
                     class="my_btn"
                     style={user_color_orange}
@@ -111,8 +111,8 @@ class CustomLayout extends React.Component {
                       this.changeColorHandler(event, "orange");
                     }}
                   />
-                </li>
-                <li>
+                </span>
+                <span>
                   <a
                     class="my_btn"
                     style={user_color_green}
@@ -121,8 +121,8 @@ class CustomLayout extends React.Component {
                       this.changeColorHandler(event, "green");
                     }}
                   />
-                </li>
-                <li>
+                </span>
+                <span>
                   <a
                     class="my_btn"
                     style={user_color_gray}
@@ -131,8 +131,8 @@ class CustomLayout extends React.Component {
                       this.changeColorHandler(event, "gray");
                     }}
                   />
-                </li>
-              </ul>
+                </span>
+              </div>
             </Col>
           </Row>
           {this.props.children}

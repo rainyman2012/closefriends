@@ -12,6 +12,8 @@ import ResultSurvey from "./containers/ResultSurvey";
 import PreCreate from "./containers/PreCreate";
 import DetailResult from "./containers/DetailResult";
 import AnalyzeSurvey from "./containers/AnalyzeSurvey";
+import LinkRecovery from "./containers/LinkRecovery";
+
 import Survey from "./containers/Survey";
 
 /* <Route exact path="/survey/:uuid" component={ResultSurvey} /> */
@@ -31,6 +33,7 @@ const BaseRouter = () => {
       <Route exact path="/result/:uuid" component={ResultSurvey} />
       <Route exact path="/detailResult/:uuid/:pk" component={DetailResult} />
       <Route exact path="/analyze/:uuid/:pk" component={AnalyzeSurvey} />
+      <Route exact path="/recovery" component={LinkRecovery} />
 
       <Route exact path="/su/:uuid" component={StartSurvey} />
 

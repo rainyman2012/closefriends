@@ -73,7 +73,7 @@ export const surveyGetData = uuid => {
   };
 };
 
-export const createSurvey = (name, lang, sex) => {
+export const createSurvey = (name, lang, sex, password) => {
   return dispatch => {
     dispatch(surveyStart());
     axios({
@@ -81,7 +81,8 @@ export const createSurvey = (name, lang, sex) => {
       data: {
         name: name,
         lang: lang,
-        sex: sex
+        sex: sex,
+        password: password
       },
       url: `${HOSTNAME}/survey/`,
       headers: {

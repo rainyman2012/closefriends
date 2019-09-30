@@ -33,8 +33,13 @@ class Survey extends Component {
     ) {
       if (this.props.userType == "admin") {
         const cookies = new Cookies();
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+
         cookies.set("assignments", `EHS_${this.props.currentSurvey.uuid}`, {
-          path: "/"
+          path: "/",
+          expires: nextYear
         });
       }
     }
@@ -137,7 +142,6 @@ class Survey extends Component {
       disabled: isDisable
     });
   };
-
   render() {
     const { currentSurvey } = this.props;
     const { currentQuestion } = this.state;
@@ -162,12 +166,14 @@ class Survey extends Component {
       );
 
     let rtl_support = null;
-
-    if (this.props.language === "fa")
+    let orderButton = [1, 2, 3]; // refer to Next, prev, done buttons.
+    if (this.props.language === "fa") {
       rtl_support = {
         textAlign: "right",
         marginRight: "10px"
       };
+      orderButton = orderButton.reverse();
+    }
     if (!currentSurvey)
       return (
         <div style={{ textAlign: "center" }}>
@@ -240,7 +246,7 @@ class Survey extends Component {
           style={{ marginTop: "50px" }}
         >
           {currentQuestion > 0 && (
-            <Col>
+            <Col order={orderButton[0]}>
               <Button type="primary" onClick={this.onPrev}>
                 {page_texts.prev}
               </Button>
@@ -248,7 +254,7 @@ class Survey extends Component {
           )}
 
           {currentQuestion === questions.length - 1 && (
-            <Col>
+            <Col order={orderButton[1]}>
               <Button
                 type="primary"
                 onClick={this.onDone}
@@ -259,7 +265,7 @@ class Survey extends Component {
             </Col>
           )}
           {currentQuestion < questions.length - 1 && (
-            <Col>
+            <Col order={orderButton[2]}>
               <Button
                 type="primary"
                 onClick={this.onNext}

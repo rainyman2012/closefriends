@@ -120,10 +120,11 @@ class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
         fields = ('answer_set', 'questions', 'name',
-                  'uuid', 'realAnswers', 'lang', 'sex')
+                  'uuid', 'realAnswers', 'lang', 'sex', 'password')
         depth = 2  # we can set this to get all realation
         extra_kwargs = {
             'realAnswers': {'write_only': True},
+            'password': {'write_only': True},
         }
 
     def get_questions(self, obj):

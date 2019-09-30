@@ -5,6 +5,8 @@ import base64
 from PIL import Image
 
 from django.db.models import Q
+from django.db.models.signals import pre_save
+from passlib.hash import pbkdf2_sha256
 
 
 def generate_uuid():
@@ -82,6 +84,8 @@ class SurveyManager(models.Manager):
 
     def create(self, **kwargs):
         obj = super().create(**kwargs)
+        obj.password = pbkdf2_sha256.encrypt(
+            obj.password, rounds=12000, salt_size=32)
         rand_question = self.get_random_questions(15, obj)
         obj.questions.set(rand_question)
         obj.save()
@@ -101,6 +105,12 @@ class SurveyManager(models.Manager):
     def get_questions(self, _uuid):
         return self.filter(uuid__exact=_uuid).first()
 
+    def verify_password(self, password, uuid):
+        obj = self.filter(uuid__iexact=uuid).first()
+        if obj:
+            return pbkdf2_sha256.verify(password, obj.password)
+        return False
+
 
 class Survey(models.Model):
     name = models.CharField(max_length=80)
@@ -109,6 +119,7 @@ class Survey(models.Model):
     uuid = models.CharField(max_length=32, blank=True,
                             null=True, default=generate_uuid, editable=False)
     lang = models.CharField(max_length=10, default="fa")
+    password = models.CharField(max_length=256, default="1234")
 
     sex = models.CharField(max_length=50, blank=True, null=True)
 
@@ -125,6 +136,7 @@ class Survey(models.Model):
 class Answer(models.Model):
     name = models.CharField(max_length=80)
     total_correct = models.IntegerField(null=True)
+    free = models.BooleanField(default=False)
     answers = JSONField(null=True)
     survey = models.ForeignKey(
         Survey, blank=True, null=True, on_delete=models.CASCADE)
@@ -139,3 +151,18 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# # ================================SIGNALES==========================================
+
+# def encrypt_password(sender, **kwargs):
+#     obj = kwargs['instance']
+#     try:
+#         if obj.questions:
+#             obj.password = pbkdf2_sha256.encrypt(
+#                 obj.password, rounds=12000, salt_size=32)
+#     except:
+#         pass
+
+
+# pre_save.connect(encrypt_password, sender=Survey)

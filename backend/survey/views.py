@@ -55,22 +55,22 @@ class QuestionListView(generics.ListAPIView):
         id_list = Question.objects.filter(
             Q(sex__exact=sex) | Q(sex__isnull=True)).values_list('id', flat=True).order_by('id')
 
-        # cat1 = list(id_list)[0:17]
-        # cat2 = list(id_list)[17:]
+        cat1 = list(id_list)[0:17]
+        cat2 = list(id_list)[17:]
 
-        # random_cat1_list = random.sample(
-        #     list(cat1), k=min(len(cat1), numberOfPicBaseQuestions))
-        # random_cat2_list = random.sample(
-        #     list(cat2), k=min(len(cat2), numberOfPicBaseQuestions))
-        # final_random_list = random_cat1_list + random_cat2_list
-        #     query_set = Question.objects.filter(
-        #    id__in=final_random_list)
-
-        random_list = random.sample(
-            list(id_list), k=min(len(id_list), 1))
-
+        random_cat1_list = random.sample(
+            list(cat1), k=min(len(cat1), numberOfPicBaseQuestions))
+        random_cat2_list = random.sample(
+            list(cat2), k=min(len(cat2), numberOfPicBaseQuestions))
+        final_random_list = random_cat1_list + random_cat2_list
         query_set = Question.objects.filter(
-            id__in=random_list)
+            id__in=final_random_list)
+
+        # random_list = random.sample(
+        #     list(id_list), k=min(len(id_list), 1))
+
+        # query_set = Question.objects.filter(
+        #     id__in=random_list)
 
         # Get serilizer to serilize customize questy set
         serializer = self.get_serializer(query_set, many=True)

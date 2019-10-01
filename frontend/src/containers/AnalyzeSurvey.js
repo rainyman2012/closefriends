@@ -174,10 +174,23 @@ class AnalyzeSurvey extends Component {
                             alt=""
                             src={HOSTNAME + data.userChoiceImage}
                           />
-                          <hr />
-                          <p style={rtl_support}>{data.userShortDescAnalyze}</p>
-                          <hr />
-                          <p style={rtl_support}>{data.userLongDescAnalyze}</p>
+                          {data.userShortDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.userShortDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
+                          {data.userLongDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.userLongDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
+
                           <hr />
                           <div
                             style={{
@@ -205,12 +218,23 @@ class AnalyzeSurvey extends Component {
                             alt=""
                             src={HOSTNAME + data.adminChoiceImage}
                           />
-                          <hr />
-                          <p style={rtl_support}>
-                            {data.adminShortDescAnalyze}
-                          </p>
-                          <hr />
-                          <p style={rtl_support}>{data.adminLongDescAnalyze}</p>
+                          {data.adminShortDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.adminShortDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
+                          {data.adminShortDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.adminShortDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
+
                           <hr />
                           <p>
                             {page_texts.answer.replace("{}", detailAnswer.name)}
@@ -221,10 +245,22 @@ class AnalyzeSurvey extends Component {
                             alt=""
                             src={HOSTNAME + data.userChoiceImage}
                           />
-                          <hr />
-                          <p style={rtl_support}>{data.userShortDescAnalyze}</p>
-                          <hr />
-                          <p style={rtl_support}>{data.userLongDescAnalyze}</p>
+                          {data.userShortDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.userShortDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
+                          {data.userLongDescAnalyze ? (
+                            <React.Fragment>
+                              <hr />
+                              <p style={rtl_support}>
+                                {data.userLongDescAnalyze}
+                              </p>
+                            </React.Fragment>
+                          ) : null}
                           <hr />
                           <div
                             style={{

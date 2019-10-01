@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { surveyGetData, surveySetData } from "../store/actions/survey";
 
 import {
   Button,
@@ -127,16 +126,15 @@ class HomepageLayout extends Component {
 //   };
 // };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSurvey: () => dispatch(surveyGetData()),
-    setSurvey: name => dispatch(surveySetData(name))
-  };
-};
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     setSurvey: name => dispatch(surveySetData(name))
+//   };
+// };
 
 export default withRouter(
   connect(
     null,
-    mapDispatchToProps
+    null
   )(HomepageLayout)
 );

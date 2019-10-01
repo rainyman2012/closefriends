@@ -86,8 +86,6 @@ class SurveyManager(models.Manager):
         obj = super().create(**kwargs)
         obj.password = pbkdf2_sha256.encrypt(
             obj.password, rounds=12000, salt_size=32)
-        rand_question = self.get_random_questions(15, obj)
-        obj.questions.set(rand_question)
         obj.save()
         return obj
 
@@ -124,7 +122,7 @@ class Survey(models.Model):
     questions = models.ManyToManyField(Question)
     realAnswers = JSONField(null=True)
     uuid = models.CharField(max_length=32, blank=True,
-                            null=True, default=generate_uuid, editable=False)
+                            null=True, default=generate_uuid)
     lang = models.CharField(max_length=10, default="fa")
     password = models.CharField(max_length=256, default="1234")
 

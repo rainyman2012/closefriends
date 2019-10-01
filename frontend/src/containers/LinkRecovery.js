@@ -16,7 +16,7 @@ class LinkRecovery extends Component {
     size: "large",
     enterSuCodeError: "",
     enterPasswordError: "",
-    verified: false,
+    verified: "",
     serverError: false
   };
 
@@ -47,7 +47,8 @@ class LinkRecovery extends Component {
       })
         .then(res => {
           const verified = res.data;
-          this.setState({ verified });
+          if (verified) this.setState({ verified: "found" });
+          else this.setState({ verified: "notfound" });
         })
         .catch(err => {
           this.setState({ serverError: true });
@@ -66,6 +67,9 @@ class LinkRecovery extends Component {
     message.success(msg);
   };
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.verified != nextState.verified) return true;
+  }
   render() {
     const { size } = this.state;
     const { error } = this.state;
@@ -91,11 +95,65 @@ class LinkRecovery extends Component {
     if (this.state.redirect_to) return <Redirect to={this.state.redirect_to} />;
     if (error) errorStyle = { borderColor: "#f5222d" };
 
-    if (this.state.verified) {
-      const cookies = new Cookies();
-      cookies.set("assignments", `EHS_${this.state.suCode}`, {
-        path: "/"
-      });
+    let result = "";
+    switch (this.state.verified) {
+      case "":
+        result = <p></p>;
+        break;
+      case "found":
+        const cookies = new Cookies();
+        cookies.set("assignments", `EHS_${this.state.suCode}`, {
+          path: "/"
+        });
+        result = (
+          <Row style={{ marginTop: "50px" }} type="flex" justify="center">
+            <Col span={23}>
+              <div
+                style={{
+                  borderStyle: "solid",
+                  borderWidth: "5px",
+                  borderColor: "yellow",
+                  padding: "10px",
+                  textAlign: "center",
+                  borderRadius: "10px"
+                }}
+              >
+                <p style={{ textAlign: "center" }}>
+                  {page_texts.successfulRecovery}
+                </p>
+                <textarea
+                  style={{ width: "100%" }}
+                  onClick={(e, msg = page_texts.copied) =>
+                    this.copyToClipBoard(e, msg)
+                  }
+                >{`${HOSTNAME}/su/${this.state.suCode}`}</textarea>
+              </div>
+            </Col>
+          </Row>
+        );
+        break;
+      case "notfound":
+        result = (
+          <Row style={{ marginTop: "50px" }} type="flex" justify="center">
+            <Col span={23}>
+              <div
+                style={{
+                  borderStyle: "solid",
+                  borderWidth: "5px",
+                  borderColor: "yellow",
+                  padding: "10px",
+                  textAlign: "center",
+                  borderRadius: "10px"
+                }}
+              >
+                <p>{page_texts.notFound}</p>;
+              </div>
+            </Col>
+          </Row>
+        );
+
+      default:
+        break;
     }
 
     return (
@@ -166,32 +224,7 @@ class LinkRecovery extends Component {
             </Link>
           </Col>
         </Row>
-        {this.state.verified ? (
-          <Row style={{ marginTop: "50px" }} type="flex" justify="center">
-            <Col span={23}>
-              <div
-                style={{
-                  borderStyle: "solid",
-                  borderWidth: "5px",
-                  borderColor: "yellow",
-                  padding: "10px",
-                  textAlign: "center",
-                  borderRadius: "10px"
-                }}
-              >
-                <p style={{ textAlign: "center" }}>
-                  {page_texts.successfulRecovery}
-                </p>
-                <textarea
-                  style={{ width: "100%" }}
-                  onClick={(e, msg = page_texts.copied) =>
-                    this.copyToClipBoard(e, msg)
-                  }
-                >{`${HOSTNAME}/su/${this.state.suCode}`}</textarea>
-              </div>
-            </Col>
-          </Row>
-        ) : null}
+        {result}
       </Hoc>
     );
   }
@@ -199,7 +232,6 @@ class LinkRecovery extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentSurvey: state.survey.currentSurvey,
     loading: state.survey.loading,
     serverError: state.survey.error,
     verifiedPass: state.survey.verifiedPass,
@@ -209,7 +241,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSurvey: uuid => dispatch(surveyGetData(uuid)),
     setUserName: userName => dispatch(surveySetUserName(userName))
   };
 };

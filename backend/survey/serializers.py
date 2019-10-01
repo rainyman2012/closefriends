@@ -29,7 +29,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('choices', 'name', 'ask', 'sex', 'analyze')
+        fields = ('id', 'choices', 'name', 'ask', 'sex', 'analyze',)
 
     def get_choices(self, obj):
         queryset = obj.choice_set.all()
@@ -113,25 +113,19 @@ class StatisticSerializer(serializers.ModelSerializer):
 
 
 class SurveySerializer(serializers.ModelSerializer):
-    questions = serializers.SerializerMethodField()
+    questions = QuestionSerializer(many=True, required=False)
 
     answer_set = AnswerSerializer(write_only=True, required=False)
 
     class Meta:
         model = Survey
-        fields = ('answer_set', 'questions', 'name',
+        fields = ('id', 'answer_set', 'questions', 'name',
                   'uuid', 'realAnswers', 'lang', 'sex', 'password')
         depth = 2  # we can set this to get all realation
         extra_kwargs = {
             'realAnswers': {'write_only': True},
             'password': {'write_only': True},
         }
-
-    def get_questions(self, obj):
-        queryset = obj.questions.filter(
-            Q(sex__exact=obj.sex) | Q(sex__isnull=True))
-        questions = QuestionSerializer(queryset, many=True, read_only=True)
-        return questions.data
 
     # Default `create` and `update` behavior...
 
@@ -158,44 +152,7 @@ class SurveySerializer(serializers.ModelSerializer):
         """
 
         ModelClass = self.Meta.model
-
-        # Remove many-to-many relationships from validated_data.
-        # They are not valid arguments to the default `.create()` method,
-        # as they require that the instance has already been saved.
-        info = model_meta.get_field_info(ModelClass)
-        many_to_many = {}
-        for field_name, relation_info in info.relations.items():
-            if relation_info.to_many and (field_name in validated_data):
-                many_to_many[field_name] = validated_data.pop(field_name)
-
-        try:
-            instance = ModelClass._default_manager.create(**validated_data)
-        except TypeError:
-            tb = traceback.format_exc()
-            msg = (
-                'Got a `TypeError` when calling `%s.%s.create()`. '
-                'This may be because you have a writable field on the '
-                'serializer class that is not a valid argument to '
-                '`%s.%s.create()`. You may need to make the field '
-                'read-only, or override the %s.create() method to handle '
-                'this correctly.\nOriginal exception was:\n %s' %
-                (
-                    ModelClass.__name__,
-                    ModelClass._default_manager.name,
-                    ModelClass.__name__,
-                    ModelClass._default_manager.name,
-                    self.__class__.__name__,
-                    tb
-                )
-            )
-            raise TypeError(msg)
-
-        # Save many-to-many relationships after the instance is created.
-        if many_to_many:
-            for field_name, value in many_to_many.items():
-                field = getattr(instance, field_name)
-                field.set(value)
-
+        instance = ModelClass._default_manager.create(**validated_data)
         return instance
 
     def update(self, instance, validated_data):

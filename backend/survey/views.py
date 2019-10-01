@@ -17,10 +17,11 @@ from rest_framework import viewsets, mixins
 from survey.serializers import (
     SurveySerializer,
     AnswerSerializer,
+    QuestionSerializer,
     StatisticSerializer
 )
 from survey.serializers import UserSerializer
-from .models import Survey, Answer
+from .models import Survey, Answer, Question
 import io
 from rest_framework import authentication, permissions
 from rest_framework.views import APIView
@@ -33,6 +34,47 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
+from django.db.models import Q
+import random
+
+
+class QuestionListView(generics.ListAPIView):
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        return Question.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        numberOfPicBaseQuestions = 11
+        numberOfPicBaseQuestions = 4
+
+        sex = kwargs.get('sex', '')
+        lang = kwargs.get('lang', '')
+        translation.activate(lang)
+
+        id_list = Question.objects.filter(
+            Q(sex__exact=sex) | Q(sex__isnull=True)).values_list('id', flat=True).order_by('id')
+
+        # cat1 = list(id_list)[0:17]
+        # cat2 = list(id_list)[17:]
+
+        # random_cat1_list = random.sample(
+        #     list(cat1), k=min(len(cat1), numberOfPicBaseQuestions))
+        # random_cat2_list = random.sample(
+        #     list(cat2), k=min(len(cat2), numberOfPicBaseQuestions))
+        # final_random_list = random_cat1_list + random_cat2_list
+        #     query_set = Question.objects.filter(
+        #    id__in=final_random_list)
+
+        random_list = random.sample(
+            list(id_list), k=min(len(id_list), 1))
+
+        query_set = Question.objects.filter(
+            id__in=random_list)
+
+        # Get serilizer to serilize customize questy set
+        serializer = self.get_serializer(query_set, many=True)
+        return Response(serializer.data)
 
 
 class VerifiedPasswordView(View):
@@ -62,13 +104,6 @@ class StatisticViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewset
         instance = self.get_object()
         translation.activate(instance.lang)
         return super().retrieve(request, *args, **kwargs)
-
-
-# class StatisticViewSet(viewsets.ModelViewSet):
-
-#     serializer_class = StatisticSerializer
-#     queryset = Survey.objects.all()
-#     lookup_field = 'uuid'
 
 
 class SurveyViewSet(viewsets.ModelViewSet):
@@ -126,10 +161,19 @@ class SurveyViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         # set_trace()  # This is put to debug.
         all_data = request.data
+        realAnswers = all_data.pop('realAnswers')
+        questions = all_data.pop('questions')
+
+        ttt = [d['id'] for d in questions]
+        queryset = Question.objects.filter(id__in=ttt)
+
         translation.activate(all_data['lang'])
         serializer = self.get_serializer(data=all_data)
-        aa = serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        aa = serializer.is_valid()
+        instance = serializer.save()
+        instance.questions.set(queryset)
+        instance.realAnswers = json.dumps(realAnswers)
+        instance.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
 

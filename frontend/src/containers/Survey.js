@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
   surveyUpdateUserAnswerData,
-  surveyUpdateRealAnswerData
+  surveyCreate
 } from "../store/actions/survey";
 
 import Hoc from "../hoc/hoc";
 import Question from "../components/Question";
 import "../stylesheets/index.css";
 import { Button, Row, Col, Slider, Icon, Spin } from "antd";
-
 import Cookies from "universal-cookie";
 import { Lang as T } from "../languages";
 
@@ -24,25 +23,6 @@ class Survey extends Component {
       answers: [],
       size: "large"
     };
-  }
-
-  componentDidUpdate(preProps, preState) {
-    if (
-      this.props.currentSurvey !== preProps.currentSurvey ||
-      this.props.userType !== preProps.userType
-    ) {
-      if (this.props.userType == "admin") {
-        const cookies = new Cookies();
-        const current = new Date();
-        const nextYear = new Date();
-        nextYear.setFullYear(current.getFullYear() + 1);
-
-        cookies.set("assignments", `EHS_${this.props.currentSurvey.uuid}`, {
-          path: "/",
-          expires: nextYear
-        });
-      }
-    }
   }
 
   arrayItemRemove(arr, cindex) {
@@ -87,8 +67,12 @@ class Survey extends Component {
         path: "/"
       });
     } else {
-      this.props.setRealAnswerSurvey(
-        this.props.currentSurvey.uuid,
+      this.props.surveyCreate(
+        this.props.currentSurvey.userName,
+        this.props.language,
+        this.props.currentSurvey.sex,
+        this.props.currentSurvey.password,
+        this.props.currentSurvey.questions,
         this.state.answers
       );
     }
@@ -297,8 +281,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setUserAnswerSurvey: (uuid, answers, name) =>
       dispatch(surveyUpdateUserAnswerData(uuid, answers, name)),
-    setRealAnswerSurvey: (uuid, answers) =>
-      dispatch(surveyUpdateRealAnswerData(uuid, answers))
+    surveyCreate: (name, lang, sex, password, questions, realAnswers) =>
+      dispatch(surveyCreate(name, lang, sex, password, questions, realAnswers))
   };
 };
 

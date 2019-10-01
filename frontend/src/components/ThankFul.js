@@ -3,9 +3,10 @@ import "../stylesheets/thankfull.css";
 import { connect } from "react-redux";
 import { withRouter, Link, Redirect } from "react-router-dom";
 import { useAlert } from "react-alert";
-import { Button, Row, Col, Modal, message } from "antd";
+import { Button, Row, Col, Modal, message, Spin } from "antd";
 import { Lang as T } from "../languages";
 import parse from "html-react-parser";
+import Cookies from "universal-cookie";
 
 function withAlert(Component) {
   return function WrappedComponent(props) {
@@ -38,12 +39,29 @@ class ThankFul extends Component {
       redirect_to_whatsup: false
     });
   };
+
   // to avoid re-rendering
   shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.currentSurvey.uuid !== nextProps.currentSurvey.uuid) {
+      if (this.props.userType == "admin") {
+        const cookies = new Cookies();
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+
+        cookies.set("assignments", `EHS_${nextProps.currentSurvey.uuid}`, {
+          path: "/",
+          expires: nextYear
+        });
+      }
+      return true;
+    }
+
     if (
       this.state.visible != nextState.visible ||
       this.state.redirect_to_whatsup != nextState.redirect_to_whatsup ||
-      this.props.color != nextProps.color
+      this.props.color != nextProps.color ||
+      this.props.loading != nextProps.loading
     )
       return true;
     return false;
@@ -76,6 +94,7 @@ class ThankFul extends Component {
 
   render() {
     const localhost = window.location.hostname;
+    const general_texts = T[this.props.language];
     const page_texts = T[this.props.language].thankful;
     let rtl_support = null;
     if (this.props.language === "fa") {
@@ -84,6 +103,13 @@ class ThankFul extends Component {
         marginRight: "20px"
       };
     }
+    if (this.props.loading)
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Spin />
+          <p style={rtl_support}>{general_texts.loading}</p>
+        </div>
+      );
 
     return (
       <div>
@@ -103,12 +129,17 @@ class ThankFul extends Component {
           ) : (
             <div>
               {this.redirectToWhatsApp(
-                this.props.thanksTo,
+                this.props.currentSurvey.userName,
                 `${localhost}/su/${this.props.currentSurvey.uuid}`,
                 page_texts.whatsAppLink
               )}
               <div style={{ textAlign: "center" }}>
-                <p>{page_texts.thanks.replace("{}", this.props.thanksTo)}</p>
+                <p>
+                  {page_texts.thanks.replace(
+                    "{}",
+                    this.props.currentSurvey.userName
+                  )}
+                </p>
                 <p style={rtl_support}>{page_texts.link} </p>
                 <span>&#128071;</span>
                 <span>&#128071;</span>
@@ -204,6 +235,7 @@ const mapStateToProps = state => {
     currentSurvey: state.survey.currentSurvey,
     thanksTo: state.survey.userName,
     userType: state.survey.userType,
+    loading: state.survey.loading,
     language: state.general.language
   };
 };

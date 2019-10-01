@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Redirect } from "react-router-dom";
-import { surveyGetData, surveySetUserName } from "../store/actions/survey";
+import { surveyGet, surveySetUserName } from "../store/actions/survey";
 import Cookies from "universal-cookie";
 
 import { Input, Button, Icon, Row, Col, Spin } from "antd";
@@ -205,7 +205,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSurvey: uuid => dispatch(surveyGetData(uuid)),
+    getSurvey: uuid => dispatch(surveyGet(uuid)),
     setUserName: userName => dispatch(surveySetUserName(userName))
   };
 };

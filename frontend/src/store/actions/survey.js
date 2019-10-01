@@ -16,7 +16,7 @@ export const setUserName = userName => {
   };
 };
 
-export const surveySuccessReceived = (survey, userType) => {
+export const surveySuccessReceivedSurvey = (survey, userType) => {
   return {
     type: actionType.SURVEY_SUCCESS_RECEIVED,
     currentSurvey: survey,
@@ -24,12 +24,27 @@ export const surveySuccessReceived = (survey, userType) => {
   };
 };
 
-export const surveySuccessCreated = (survey, userName, userType) => {
+export const surveySuccessCreated = uuid => {
   return {
-    type: actionType.SURVEY_SUCCESS_RECEIVED,
-    currentSurvey: survey,
+    type: actionType.SURVEY_SUCCESS_CREATED,
+    uuid: uuid
+  };
+};
+
+export const surveySuccessQuestionsReceived = (
+  userName,
+  sex,
+  password,
+  userType,
+  questions
+) => {
+  return {
+    type: actionType.SURVEY_SUCCESS_QUESTIONS_RECEIVERD,
     userName: userName,
-    userType: userType
+    sex: sex,
+    password: password,
+    userType: userType,
+    questions: questions
   };
 };
 
@@ -51,8 +66,39 @@ export const surveySetUserName = userName => {
     dispatch(setUserName(userName));
   };
 };
+
 // This UserName is the name of user is being poing
-export const surveyGetData = uuid => {
+export const surveyGetQuestions = (name, sex, lang, password) => {
+  //survey/getQuestions/fa/m/
+  return dispatch => {
+    dispatch(surveyStart());
+    axios({
+      method: "get",
+      url: `${HOSTNAME}/survey/getQuestions/${lang}/${sex}/`,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        const questions = res.data;
+        dispatch(
+          surveySuccessQuestionsReceived(
+            name,
+            sex,
+            password,
+            "admin",
+            questions
+          )
+        );
+      })
+      .catch(err => {
+        dispatch(surveyFail(err));
+      });
+  };
+};
+
+// This UserName is the name of user is being poing
+export const surveyGet = uuid => {
   return dispatch => {
     dispatch(surveyStart());
     axios({
@@ -64,7 +110,7 @@ export const surveyGetData = uuid => {
     })
       .then(res => {
         const survey = res.data;
-        dispatch(surveySuccessReceived(survey, "user"));
+        dispatch(surveySuccessReceivedSurvey(survey, "user"));
         dispatch(setLanguage(survey.lang));
       })
       .catch(err => {
@@ -73,7 +119,14 @@ export const surveyGetData = uuid => {
   };
 };
 
-export const createSurvey = (name, lang, sex, password) => {
+export const surveyCreate = (
+  name,
+  lang,
+  sex,
+  password,
+  questions,
+  realAnswers
+) => {
   return dispatch => {
     dispatch(surveyStart());
     axios({
@@ -82,7 +135,9 @@ export const createSurvey = (name, lang, sex, password) => {
         name: name,
         lang: lang,
         sex: sex,
-        password: password
+        password: password,
+        questions: questions,
+        realAnswers: realAnswers
       },
       url: `${HOSTNAME}/survey/`,
       headers: {
@@ -90,12 +145,12 @@ export const createSurvey = (name, lang, sex, password) => {
       }
     })
       .then(res => {
-        const survey = res.data;
+        const data = res.data;
         // const token = res.data.key;
         // const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
         // localStorage.setItem("token", token);
         // localStorage.setItem("expirationDate", expirationDate);
-        dispatch(surveySuccessCreated(survey, survey.name, "admin"));
+        dispatch(surveySuccessCreated(data.uuid));
 
         // dispatch(checkAuthTimeout(3600));
       })

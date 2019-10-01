@@ -2,17 +2,40 @@ import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {
-  currentSurvey: null,
+  currentSurvey: {
+    userName: "",
+    password: "",
+    uuid: "",
+    questions: null,
+    sex: ""
+  },
   error: null,
   loading: false,
-  userName: "",
-  userType: ""
+  userType: "",
+  complete: false
 };
 
 const surveyStart = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: true
+  });
+};
+
+const surveySuccessQuestionReceived = (state, action) => {
+  const currentSurvey = {
+    userName: action.userName,
+    password: action.password,
+    questions: action.questions,
+    sex: action.sex,
+    loading: false
+  };
+
+  return updateObject(state, {
+    currentSurvey: currentSurvey,
+    error: null,
+    loading: false,
+    userType: action.userType
   });
 };
 
@@ -24,9 +47,10 @@ const surveySetUserName = (state, action) => {
 };
 
 const surveySuccessCreated = (state, action) => {
+  const currentSurvey = { ...state.currentSurvey, ...action };
   return updateObject(state, {
-    currentSurvey: action.currentSurvey,
-    error: null,
+    currentSurvey: currentSurvey,
+    complete: SVGComponentTransferFunctionElement,
     loading: false
   });
 };
@@ -57,6 +81,9 @@ const serveyFail = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.SURVEY_SUCCESS_QUESTIONS_RECEIVERD:
+      return surveySuccessQuestionReceived(state, action);
+
     case actionTypes.SURVEY_SUCCESS_UPDATED:
       return surveySuccessUpdated(state, action);
 

@@ -9,7 +9,8 @@ const Lang = {
       caption: "بازگردانی دسترسی به صفحه‌ی مدیریت",
       successfulRecovery:
         "دسترسی شما بازگشت. لطفا لینک زیر را در همین مرورگر باز کنید",
-      back: "بازگشت"
+      back: "بازگشت",
+      notFound: "یکی از موارد احراز هویت شما غلط است. لطفا دوباره بررسی کنید."
     },
     precreate: {
       create: "به منظور ساخت آزمون, نام، جنسیت و یک رمز وارد کنید",
@@ -116,7 +117,8 @@ const Lang = {
       caption: "Access Recovery",
       successfulRecovery:
         "Your link successfully recovered. Open link below in this browser",
-      back: "Back"
+      back: "Back",
+      notFound: "One of your identifiers was wrong. Please check again"
     },
     precreate: {
       create: "To start creating your survey fill out fields below",

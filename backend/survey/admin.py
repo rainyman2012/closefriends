@@ -52,9 +52,14 @@ class TargetAdmin(TranslationAdmin):
     pass
 
 
+class SurveyAdmin(admin.ModelAdmin):
+    exclude = ("uuid ",)
+    readonly_fields = ('uuid', )
+
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Target, TargetAdmin)
 
-admin.site.register(Survey)
+admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Answer)

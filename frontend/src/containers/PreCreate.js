@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
-import { createSurvey } from "../store/actions/survey";
+import { surveyGetQuestions } from "../store/actions/survey";
 import { setLanguage } from "../store/actions/general";
 import { Input, Button, Icon, Row, Col, Spin } from "antd";
 import { Menu, Dropdown, message } from "antd";
@@ -33,10 +33,10 @@ class PreCreate extends Component {
     this.setState(state);
 
     if (!state.enterNameError && !state.enterSexError) {
-      this.props.createSurvey(
+      this.props.getQuestions(
         name,
-        this.props.language,
         this.state.sex,
+        this.props.language,
         password
       );
       this.props.history.push("/polling");
@@ -249,8 +249,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    createSurvey: (name, lang, sex, password) =>
-      dispatch(createSurvey(name, lang, sex, password)),
+    getQuestions: (name, sex, lang, password) =>
+      dispatch(surveyGetQuestions(name, sex, lang, password)),
     setLanguage: language => dispatch(setLanguage(language))
   };
 };

@@ -167,10 +167,7 @@ class CustomLayout extends React.Component {
               If you like to be a contributor to this project you can checkout
               this github
             </p>
-            <a
-              style={{ fontSize: "20px" }}
-              href="https://github.com/rainyman2012/closefriends"
-            >
+            <a style={{ fontSize: "20px" }} href="https://github.com">
               <div>
                 <i className="fa fa-github"></i>
               </div>

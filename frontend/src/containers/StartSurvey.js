@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter, Redirect, Link } from "react-router-dom";
 import { surveyGet, surveySetUserName } from "../store/actions/survey";
 import Cookies from "universal-cookie";
 
@@ -95,6 +95,7 @@ class StartSurvey extends Component {
               </Button>
             </Col>
           </Row>
+
           <p>{general_texts.twiceAttendError}... </p>
         </div>
       );
@@ -148,6 +149,7 @@ class StartSurvey extends Component {
               <Button
                 type="success"
                 size={size}
+                style={{ width: "200px", marginBottom: "5px" }}
                 onClick={() => this.props.history.push("/precreate")}
               >
                 <Icon
@@ -158,6 +160,13 @@ class StartSurvey extends Component {
                 {page_texts.createYourSurveyBtn}
               </Button>
             </div>
+          </Col>
+          <Col>
+            <Link to="/recovery">
+              <Button type="success" style={{ width: "200px" }} size={size}>
+                {page_texts.recovery}
+              </Button>
+            </Link>
           </Col>
         </Row>
 

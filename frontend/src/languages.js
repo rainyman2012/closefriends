@@ -66,7 +66,8 @@ const Lang = {
       welcome: "به نظرسنجی {} خوش آمدید",
       createYourSurveyBtn: "ایجاد یک نظر سنجی جدید",
       enterYourName: "نام خود را وارد کنید",
-      start: "شروع"
+      start: "شروع",
+      recovery: "بازیابی دسترسی به صفحه‌ مدیریت"
     },
     resultSurvey: {
       nameColumn: "نام",

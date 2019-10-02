@@ -46,7 +46,7 @@ class QuestionListView(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         numberOfPicBaseQuestions = 11
-        numberOfPicBaseQuestions = 4
+        numberOfTextBaseQuestions = 4
 
         sex = kwargs.get('sex', '')
         lang = kwargs.get('lang', '')
@@ -61,7 +61,7 @@ class QuestionListView(generics.ListAPIView):
         random_cat1_list = random.sample(
             list(cat1), k=min(len(cat1), numberOfPicBaseQuestions))
         random_cat2_list = random.sample(
-            list(cat2), k=min(len(cat2), numberOfPicBaseQuestions))
+            list(cat2), k=min(len(cat2), numberOfTextBaseQuestions))
         final_random_list = random_cat1_list + random_cat2_list
         query_set = Question.objects.filter(
             id__in=final_random_list)

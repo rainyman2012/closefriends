@@ -165,7 +165,7 @@ class LinkRecovery extends Component {
               <img
                 width="80%"
                 className="SUCodeImage"
-                src="http://localhost:8000/media/serial.png"
+                src={`${HOSTNAME}/media/serial.png`}
                 alt=""
               />
             </div>

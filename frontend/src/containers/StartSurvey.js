@@ -137,15 +137,12 @@ class StartSurvey extends Component {
 
     return (
       <Hoc>
-        <Row type="flex" justify="center" style={{ marginBottom: "50px" }}>
+        <p style={{ textAlign: "center", fontSize: "20px" }}>
+          {page_texts.welcome.replace("{}", this.props.currentSurvey.name)}
+        </p>
+        <Row type="flex" justify="center">
           <Col>
             <div>
-              <p style={{ textAlign: "center" }}>
-                {page_texts.welcome.replace(
-                  "{}",
-                  this.props.currentSurvey.name
-                )}
-              </p>
               <Button
                 type="success"
                 size={size}
@@ -161,6 +158,8 @@ class StartSurvey extends Component {
               </Button>
             </div>
           </Col>
+        </Row>
+        <Row type="flex" justify="center" style={{ marginBottom: "50px" }}>
           <Col>
             <Link to="/recovery">
               <Button type="success" style={{ width: "200px" }} size={size}>

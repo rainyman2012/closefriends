@@ -129,7 +129,7 @@ class CustomLayout extends React.Component {
       );
     else
       heart_type = (
-        <img src={gifLogo} width="65px" height="60px" alt="loading..." />
+        <img src={gifLogo} width="55px" height="50px" alt="loading..." />
       );
     return (
       <Layout
@@ -254,8 +254,10 @@ class CustomLayout extends React.Component {
               </a>
             </p>
             <div dir="ltr">
-              <span>I have {this.state.likedNum} </span> {heart_type}
-              <span>till now. </span>
+              <span style={{ position: "relative", left: "30px" }}>
+                {this.state.likedNum}
+              </span>
+              {heart_type}
             </div>
           </p>
         </Footer>

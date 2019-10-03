@@ -7,6 +7,7 @@ class RemoveSurvey extends Component {
 
     cookies.remove("assignments", { path: "/" });
     cookies.remove("expired", { path: "/" });
+    cookies.remove("heart", { path: "/" });
 
     return <p>removeing </p>;
 

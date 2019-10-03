@@ -4,6 +4,13 @@ import { connect } from "react-redux";
 import { changeColor } from "../store/actions/general";
 import { Layout, Row, Col, Icon } from "antd";
 import "../stylesheets/layout.css";
+import { HOSTNAME } from "../static";
+import { Lang as T } from "../languages";
+
+import gifLogo from "../heart.gif";
+import picLogo from "../heart-pic.jpg";
+import Cookies from "universal-cookie";
+import axios from "axios";
 
 const { Content, Footer } = Layout;
 
@@ -12,16 +19,68 @@ const myPadding = {
 };
 class CustomLayout extends React.Component {
   state = {
-    background_color: "#c64b76"
+    background_color: "#c64b76",
+    heartType: "pic",
+    serverError: false,
+    likedNum: 0
   };
   changeColorHandler = (e, color) => {
     this.props.changeColor(color);
   };
 
+  heartClick = e => {
+    const cookies = new Cookies();
+    const current = new Date();
+    const nextYear = new Date();
+    nextYear.setFullYear(current.getFullYear() + 1);
+    axios({
+      method: "post",
+      data: {
+        like: true
+      },
+      url: `${HOSTNAME}/survey/like`,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        const liked = res.data;
+        this.setState({ likedNum: liked });
+      })
+      .catch(err => {
+        this.setState({ serverError: true });
+        console.log(err);
+      });
+    cookies.set("heart", `true`, {
+      path: "/",
+      expires: nextYear
+    });
+    this.setState({ heartType: "gif" });
+  };
+
   componentWillMount() {
+    const cookies = new Cookies();
+    if (cookies.get("heart") === "true") this.setState({ heartType: "gif" });
     document.body.style.backgroundColor = this.state.background_color;
+    axios({
+      method: "get",
+      url: `${HOSTNAME}/survey/like`,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        const liked = res.data;
+        this.setState({ likedNum: liked });
+      })
+      .catch(err => {
+        this.setState({ serverError: true });
+        console.log(err);
+      });
   }
   render() {
+    const general_texts = T[this.props.language];
+
     // const { authenticated } = this.props;
     // here is menu bar of layout
     // This is all content page
@@ -47,9 +106,31 @@ class CustomLayout extends React.Component {
       border: "5px solid gray",
       backgroundColor: "gray"
     };
+
+    if (this.state.serverError)
+      return (
+        <div style={{ textAlign: "center" }}>
+          <p>{general_texts.serverError}... </p>
+        </div>
+      );
     const { background_color } = this.state;
     const borderWidth = "3px";
-
+    let heart_type;
+    if (this.state.heartType === "pic")
+      heart_type = (
+        <img
+          src={picLogo}
+          width="65px"
+          height="60px"
+          style={{ cursor: "pointer" }}
+          alt="loading..."
+          onClick={this.heartClick}
+        />
+      );
+    else
+      heart_type = (
+        <img src={gifLogo} width="65px" height="60px" alt="loading..." />
+      );
     return (
       <Layout
         style={{
@@ -163,15 +244,19 @@ class CustomLayout extends React.Component {
             <a style={{ fontSize: "20px" }} href="#">
               <i className="fa fa-telegram"></i>
             </a>
-            <p style={{ marginTop: "5px" }}>
+            <p>
               If you like to be a contributor to this project you can checkout
               this github
+              <a style={{ fontSize: "20px" }} href="https://github.com">
+                <div>
+                  <i className="fa fa-github"></i>
+                </div>
+              </a>
             </p>
-            <a style={{ fontSize: "20px" }} href="https://github.com">
-              <div>
-                <i className="fa fa-github"></i>
-              </div>
-            </a>
+            <div dir="ltr">
+              <span>I have {this.state.likedNum} </span> {heart_type}
+              <span>till now. </span>
+            </div>
           </p>
         </Footer>
       </Layout>
@@ -181,7 +266,8 @@ class CustomLayout extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    color: state.general.color
+    color: state.general.color,
+    language: state.general.language
   };
 };
 

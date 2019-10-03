@@ -226,11 +226,11 @@ class AnalyzeSurvey extends Component {
                               </p>
                             </React.Fragment>
                           ) : null}
-                          {data.adminShortDescAnalyze ? (
+                          {data.adminLongDescAnalyze ? (
                             <React.Fragment>
                               <hr />
                               <p style={rtl_support}>
-                                {data.adminShortDescAnalyze}
+                                {data.adminLongDescAnalyze}
                               </p>
                             </React.Fragment>
                           ) : null}

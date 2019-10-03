@@ -5,7 +5,8 @@ from survey.views import (
     SurveyViewSet,
     StatisticViewSet,
     VerifiedPasswordView,
-    QuestionListView
+    QuestionListView,
+    GeneralView
 
 )
 from . import views
@@ -21,7 +22,8 @@ router.register(r'', SurveyViewSet, base_name='survey')
 urlpatterns = router.urls
 urlpatterns += [
     path(r'getQuestions/<str:lang>/<str:sex>/', QuestionListView.as_view()),
-    path(r'verify', VerifiedPasswordView.as_view())
+    path(r'verify', VerifiedPasswordView.as_view()),
+    path(r'like', GeneralView.as_view())
 ]
 
 for url in router.urls:

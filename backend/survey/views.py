@@ -21,7 +21,7 @@ from survey.serializers import (
     StatisticSerializer
 )
 from survey.serializers import UserSerializer
-from .models import Survey, Answer, Question
+from .models import Survey, Answer, Question, General
 import io
 from rest_framework import authentication, permissions
 from rest_framework.views import APIView
@@ -36,6 +36,56 @@ from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.db.models import Q
 import random
+
+
+class GeneralView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(GeneralView, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+
+        general = General.objects.first()
+        json = JSONRenderer().render(general.like)
+        return HttpResponse(json)
+
+    def post(self, request, *args, **kwargs):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        number_people_liked = 0
+        if data['like']:
+            try:
+                general = General.objects.first()
+                general.like = int(general.like) + 1
+                number_people_liked = int(general.like)
+                general.save()
+            except:
+                general = General()
+                general.like = 1
+                general.save()
+                number_people_liked = 1
+
+        json = JSONRenderer().render(number_people_liked)
+        return HttpResponse(json)
+
+
+class VerifiedPasswordView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(VerifiedPasswordView, self).dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        verified = False
+        if data['password'] and data['uuid']:
+            verified = Survey.objects.verify_password(
+                data['password'], data['uuid'])
+        json = JSONRenderer().render(verified)
+
+        return HttpResponse(json)
 
 
 class QuestionListView(generics.ListAPIView):
@@ -75,24 +125,6 @@ class QuestionListView(generics.ListAPIView):
         # Get serilizer to serilize customize questy set
         serializer = self.get_serializer(query_set, many=True)
         return Response(serializer.data)
-
-
-class VerifiedPasswordView(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(VerifiedPasswordView, self).dispatch(*args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        stream = io.BytesIO(request.body)
-        data = JSONParser().parse(stream)
-        verified = False
-        if data['password'] and data['uuid']:
-            verified = Survey.objects.verify_password(
-                data['password'], data['uuid'])
-        json = JSONRenderer().render(verified)
-
-        return HttpResponse(json)
 
 
 class StatisticViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):

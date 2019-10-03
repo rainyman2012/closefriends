@@ -158,6 +158,11 @@ class Answer(models.Model):
         return self.name
 
 
+class General(models.Model):
+
+    like = models.PositiveIntegerField(default=0)
+
+
 # # ================================SIGNALES==========================================
 
 # def encrypt_password(sender, **kwargs):

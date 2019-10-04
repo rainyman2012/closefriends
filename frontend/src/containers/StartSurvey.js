@@ -161,7 +161,12 @@ class StartSurvey extends Component {
         </Row>
         <Row type="flex" justify="center" style={{ marginBottom: "50px" }}>
           <Col>
-            <Link to="/recovery">
+            <Link
+              to={{
+                pathname: "/recovery",
+                state: { suId: this.props.match.params.uuid }
+              }}
+            >
               <Button type="success" style={{ width: "200px" }} size={size}>
                 {page_texts.recovery}
               </Button>

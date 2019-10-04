@@ -1,10 +1,26 @@
 import React, { Component } from "react";
 import "../stylesheets/choice_flex_box.css";
-import { Row, Col } from "antd";
+import { Row, Col, Spin } from "antd";
 import "../static";
 import { HOSTNAME } from "../static";
-
+import "../stylesheets/choice.css";
 class Choice extends Component {
+  state = {
+    loading: true,
+    counter: 0
+  };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.counter != this.state.counter) return false;
+    return true;
+  }
+
+  imageLoaded = () => {
+    this.state.counter += 1;
+    if (this.state.counter >= this.props.choices.length) {
+      this.setState({ loading: false });
+    }
+  };
   render() {
     let choice_dict = {};
     let row_count = -1;
@@ -24,7 +40,14 @@ class Choice extends Component {
           const render_col = choice_dict[value].map((choice, index) => {
             return (
               <Col span={11}>
-                <div key={choice.id}>
+                <div style={{ textAlign: "center" }}>
+                  <Spin size="large" spinning={this.state.loading} />
+                </div>
+
+                <div
+                  key={choice.id}
+                  style={{ display: this.state.loading ? "none" : "block" }}
+                >
                   <img
                     alt=""
                     className={
@@ -39,6 +62,7 @@ class Choice extends Component {
                     onClick={e => {
                       this.props.onAnswer(choice, e);
                     }}
+                    onLoad={this.imageLoaded}
                   />
                 </div>
               </Col>

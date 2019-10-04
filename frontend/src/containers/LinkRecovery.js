@@ -178,6 +178,11 @@ class LinkRecovery extends Component {
               style={{ ...errorStyle, ...rtl_support }}
               id="suCodeInput"
               placeholder={page_texts.enterYourSuCode}
+              value={
+                this.props.location.state.suId
+                  ? this.props.location.state.suId
+                  : ""
+              }
             />
             {this.state.enterSuCodeError ? (
               <p style={{ color: "#f5222d" }}>

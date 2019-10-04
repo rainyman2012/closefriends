@@ -48,3 +48,25 @@ export const getStatisticsData = uuid => {
       });
   };
 };
+
+// This UserName is the name of user is being poing
+export const getSimpleStatisticsData = uuid => {
+  return dispatch => {
+    dispatch(statisticsStart());
+    axios({
+      method: "get",
+      url: `${HOSTNAME}/survey/simplestat/${uuid}/`,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        const statistic = res.data;
+        dispatch(statisticsSuccessReceived(statistic, "user"));
+        dispatch(setLanguage(statistic.lang));
+      })
+      .catch(err => {
+        dispatch(statisticsFail(err));
+      });
+  };
+};

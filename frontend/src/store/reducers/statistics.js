@@ -4,7 +4,7 @@ import { updateObject } from "../utility";
 const initialState = {
   statistics: null,
   error: null,
-  loading: true,
+  loading: false,
   userName: "",
   userType: ""
 };

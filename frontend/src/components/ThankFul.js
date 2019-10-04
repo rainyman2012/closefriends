@@ -3,10 +3,11 @@ import "../stylesheets/thankfull.css";
 import { connect } from "react-redux";
 import { withRouter, Link, Redirect } from "react-router-dom";
 import { useAlert } from "react-alert";
-import { Button, Row, Col, Modal, message, Spin } from "antd";
+import { Table, Progress, Row, Col, Modal, message, Spin } from "antd";
 import { Lang as T } from "../languages";
 import parse from "html-react-parser";
 import Cookies from "universal-cookie";
+import { getSimpleStatisticsData } from "../store/actions/statistics";
 
 function withAlert(Component) {
   return function WrappedComponent(props) {
@@ -14,6 +15,56 @@ function withAlert(Component) {
 
     return <Component {...props} myAlert={alert} />;
   };
+}
+
+function renderColumn(page_texts, uuid) {
+  const columns = [
+    {
+      title: page_texts.nameColumn,
+      dataIndex: "name",
+      key: "name",
+      width: "25%",
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"]
+    },
+    {
+      title: page_texts.answerColumn,
+      dataIndex: "total_correct",
+      width: "15%",
+      key: "total_correct",
+      sorter: (a, b) => a.total_correct - b.total_correct,
+      align: "center"
+    },
+
+    {
+      title: page_texts.percentageColumn,
+      dataIndex: "correct_percentage",
+      width: "25%",
+      key: "total_percentage",
+      sorter: (a, b) => a.correct_percentage - b.correct_percentage,
+      align: "left",
+      render: correct_percentage => {
+        let custom_color = "";
+        if (correct_percentage >= 50) custom_color = "green";
+        else custom_color = "red";
+
+        return (
+          <Progress
+            type="circle"
+            percent={correct_percentage}
+            width={40}
+            strokeColor={custom_color}
+            format={percent => {
+              return (
+                <spam style={{ fontSize: "10px" }}>{Math.round(percent)}%</spam>
+              );
+            }}
+          />
+        );
+      }
+    }
+  ];
+  return columns;
 }
 
 class ThankFul extends Component {
@@ -56,14 +107,19 @@ class ThankFul extends Component {
       }
       return true;
     }
-
+    if (this.props.surveyLoading != nextProps.surveyLoading) {
+      this.props.getSimpleStatistic(this.props.currentSurvey.uuid);
+      return true;
+    }
     if (
       this.state.visible != nextState.visible ||
       this.state.redirect_to_whatsup != nextState.redirect_to_whatsup ||
       this.props.color != nextProps.color ||
-      this.props.loading != nextProps.loading
+      this.props.loading != nextProps.loading ||
+      this.props.statistics != nextProps.statistics
     )
       return true;
+
     return false;
   }
   handleOnload = e => {
@@ -103,28 +159,132 @@ class ThankFul extends Component {
         marginRight: "20px"
       };
     }
-    if (this.props.loading)
+    if (this.props.surveyLoading)
       return (
         <div style={{ textAlign: "center" }}>
           <Spin />
           <p style={rtl_support}>{general_texts.loading}</p>
         </div>
       );
-
+    if (this.props.userType == "admin")
+      if (!this.props.currentSurvey.uuid || this.props.loading)
+        return (
+          <div style={{ textAlign: "center" }}>
+            <Spin />
+            <p style={rtl_support}>{general_texts.loading}</p>
+          </div>
+        );
+    if (this.props.userType == "user") {
+      if (!this.props.statistics || this.props.loading)
+        return (
+          <div style={{ textAlign: "center" }}>
+            <Spin />
+            <p style={rtl_support}>{general_texts.loading}</p>
+          </div>
+        );
+    }
+    let listWithLastElementOfAnswers = []; // This created to recognize the current user answer to show it in a separate table
+    if (this.props.statistics) {
+      const endElementNumber = this.props.statistics.answers.length - 1;
+      listWithLastElementOfAnswers.push(
+        this.props.statistics.answers[endElementNumber]
+      );
+    }
     return (
       <div>
-        {this.props.currentSurvey ? (
+        {this.props.currentSurvey.uuid ? (
           this.props.userType == "user" ? (
             <div style={{ textAlign: "center" }}>
               <p>{page_texts.thanks.replace("{}", this.props.thanksTo)}</p>
+              <div
+                style={{
+                  borderTopStyle: "solid",
+                  borderTopWidth: "2px",
+                  borderTopColor: "yellow"
+                }}
+              >
+                <p>
+                  <h3>{page_texts.yourPercentage}</h3>
+                </p>
+                <Row>
+                  <Col>
+                    <div dir="LTR">
+                      <Table
+                        pagination={false}
+                        dataSource={listWithLastElementOfAnswers}
+                        columns={renderColumn(
+                          page_texts,
+                          this.props.statistics.uuid
+                        )}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                {this.props.currentSurvey.uuid !== "dG2b6rQsR3SoLANmeloVXA" ? (
+                  <React.Fragment>
+                    <div
+                      style={{
+                        borderTopStyle: "solid",
+                        borderTopWidth: "2px",
+                        borderTopColor: "yellow"
+                      }}
+                    >
+                      <p>
+                        <h3>
+                          {page_texts.friendsPercentage.replace(
+                            "{}",
+                            this.props.currentSurvey.name
+                          )}
+                        </h3>
+                      </p>
+                    </div>
 
-              <Row type="flex" justify="center">
-                <div>
-                  <Link className="popo createOwnSurveyBtn" to="/precreate">
-                    {page_texts.createYourSurveyBtn}
-                  </Link>
-                </div>
-              </Row>
+                    <Row>
+                      <Col>
+                        <div dir="LTR">
+                          <Table
+                            pagination={{ pageSize: 5 }}
+                            dataSource={this.props.statistics.answers}
+                            columns={renderColumn(
+                              page_texts,
+                              this.props.statistics.uuid
+                            )}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row type="flex" justify="center">
+                      <div>
+                        <Link
+                          className="popo createOwnSurveyBtn"
+                          to="/precreate"
+                        >
+                          {page_texts.createYourSurveyBtn}
+                        </Link>
+                      </div>
+                    </Row>
+                  </React.Fragment>
+                ) : (
+                  <p>This survey is limited</p>
+                )}
+              </div>
+
+              <p>
+                {page_texts.footerNote.replace(
+                  "{}",
+                  this.props.currentSurvey.name
+                )}
+              </p>
+
+              <div>
+                <Row type="flex" justify="center">
+                  <Col span={22}>
+                    <Link className="popo createOwnSurveyBtn" to="/precreate">
+                      {page_texts.createYourSurveyBtn}
+                    </Link>
+                  </Col>
+                </Row>
+              </div>
             </div>
           ) : (
             <div>
@@ -200,17 +360,7 @@ class ThankFul extends Component {
               </Row>
             </div>
           )
-        ) : (
-          <div>
-            <Row type="flex" justify="center">
-              <Col span={22}>
-                <Link className="popo createOwnSurveyBtn" to="/precreate">
-                  {page_texts.createYourSurveyBtn}
-                </Link>
-              </Col>
-            </Row>
-          </div>
-        )}
+        ) : null}
 
         <Modal
           title={page_texts.instaModalText}
@@ -235,16 +385,23 @@ const mapStateToProps = state => {
     currentSurvey: state.survey.currentSurvey,
     thanksTo: state.survey.userName,
     userType: state.survey.userType,
-    loading: state.survey.loading,
-    language: state.general.language
+    loading: state.statistics.loading,
+    language: state.general.language,
+    statistics: state.statistics.statistics,
+    surveyLoading: state.survey.loading
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    getSimpleStatistic: uuid => dispatch(getSimpleStatisticsData(uuid))
+  };
+};
 const HOCThankFul = withAlert(ThankFul);
 
 export default withRouter(
   connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
   )(HOCThankFul)
 );

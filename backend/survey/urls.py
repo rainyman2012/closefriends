@@ -6,7 +6,8 @@ from survey.views import (
     StatisticViewSet,
     VerifiedPasswordView,
     QuestionListView,
-    GeneralView
+    GeneralView,
+    SimpleStatisticViewSet
 
 )
 from . import views
@@ -16,6 +17,7 @@ app_name = "survey"
 
 router = DefaultRouter()
 router.register(r'statistics', StatisticViewSet, base_name='Statistic')
+router.register(r'simplestat', SimpleStatisticViewSet, base_name='Statistic')
 router.register(r'', SurveyViewSet, base_name='survey')
 
 

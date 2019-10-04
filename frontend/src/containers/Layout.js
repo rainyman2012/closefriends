@@ -51,7 +51,7 @@ class CustomLayout extends React.Component {
         this.setState({ serverError: true });
         console.log(err);
       });
-    cookies.set("heart", `true`, {
+    cookies.set("heart", 'true', {
       path: "/",
       expires: nextYear
     });

@@ -18,7 +18,8 @@ from survey.serializers import (
     SurveySerializer,
     AnswerSerializer,
     QuestionSerializer,
-    StatisticSerializer
+    StatisticSerializer,
+    SimpleStatisticSerializer
 )
 from survey.serializers import UserSerializer
 from .models import Survey, Answer, Question, General
@@ -97,6 +98,8 @@ class QuestionListView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         numberOfPicBaseQuestions = 11
         numberOfTextBaseQuestions = 4
+        # numberOfPicBaseQuestions = 1
+        # numberOfTextBaseQuestions = 1
 
         sex = kwargs.get('sex', '')
         lang = kwargs.get('lang', '')
@@ -127,7 +130,18 @@ class QuestionListView(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class StatisticViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class SimpleStatisticViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    serializer_class = SimpleStatisticSerializer
+    queryset = Survey.objects.all()
+    lookup_field = 'uuid'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        translation.activate(instance.lang)
+        return super().retrieve(request, *args, **kwargs)
+
+
+class StatisticViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = StatisticSerializer
     queryset = Survey.objects.all()
     lookup_field = 'uuid'

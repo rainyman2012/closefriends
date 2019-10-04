@@ -79,6 +79,32 @@ class AnswerSerializer(serializers.ModelSerializer):
         return value
 
 
+class SimpleStatisticSerializer(serializers.ModelSerializer):
+    answers = serializers.SerializerMethodField()
+    participant_count = serializers.SerializerMethodField()
+    total_questions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Survey
+        fields = ('name', 'uuid', 'answers',
+                  'participant_count', 'total_questions', 'lang')
+
+    def get_is_paid(self, obj):
+        return True
+
+    def get_answers(self, obj):
+        queryset = obj.answer_set.all().only(
+            "name", "total_correct")
+        serializer = AnswerSerializer(queryset, many=True)
+        return serializer.data
+
+    def get_participant_count(self, obj):
+        return obj.answer_set.count()
+
+    def get_total_questions(self, obj):
+        return obj.questions.filter(Q(sex__exact=obj.sex) | Q(sex__isnull=True)).count()
+
+
 class StatisticSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
     participant_count = serializers.SerializerMethodField()

@@ -77,9 +77,7 @@ class Survey extends Component {
       );
     }
 
-    this.props.history.push(`/thankful`);
-
-    // this.props.history.push("/thankful");
+    this.props.history.push("/thankful");
   };
 
   onQuestionChange = currentQuestion => {

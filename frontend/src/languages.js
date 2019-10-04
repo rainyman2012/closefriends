@@ -28,6 +28,15 @@ const Lang = {
       recovery: "بازیابی دسترسی به صفحه‌ مدیریت"
     },
     thankful: {
+      yourPercentage: "درصد شما ",
+      friendsPercentage: "درصد دوستان {}",
+      footerNote:
+        "{} می تواتد جزئیات پاسخ ها و همچنین تجزیه و تحلیل پاسخ ها را مشاهده کند",
+      nameColumn: "نام",
+      answerColumn: "تعداد پاسخ",
+      percentageColumn: "درصد",
+      totalQuestionTxt: "مجموع کل سوال‌ها",
+      totalParticipantsTxt: "مجموع شرکت کنندگان",
       thanks: "{} بابت شرکت در این آزمون  تشکر ",
       createYourSurveyBtn: "ایجاد یک نظر سنجی جدید",
       link: "لینک آزمون شما تولید شد",
@@ -137,6 +146,14 @@ const Lang = {
       recovery: "Recover Admin Page"
     },
     thankful: {
+      yourPercentage: "Your answer",
+      friendsPercentage: "{}'s friends answers",
+      footerNote: "{} can see detail result and answer's analyse",
+      nameColumn: "Name",
+      answerColumn: "Answer",
+      percentageColumn: "%",
+      totalQuestionTxt: "Total question",
+      totalParticipantsTxt: "Total participants",
       thanks: "Thank you {} for your attending",
       createYourSurveyBtn: "Create Your Survey",
       link: "This is your link",

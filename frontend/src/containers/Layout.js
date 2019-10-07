@@ -51,7 +51,7 @@ class CustomLayout extends React.Component {
         this.setState({ serverError: true });
         console.log(err);
       });
-    cookies.set("heart", 'true', {
+    cookies.set("heart", "true", {
       path: "/",
       expires: nextYear
     });
@@ -244,21 +244,6 @@ class CustomLayout extends React.Component {
             <a style={{ fontSize: "20px" }} href="#">
               <i className="fa fa-telegram"></i>
             </a>
-            <p>
-              If you like to be a contributor to this project you can checkout
-              this github
-              <a style={{ fontSize: "20px" }} href="https://github.com">
-                <div>
-                  <i className="fa fa-github"></i>
-                </div>
-              </a>
-            </p>
-            <div dir="ltr">
-              <span style={{ position: "relative", left: "36px" }}>
-                {this.state.likedNum}
-              </span>
-              {heart_type}
-            </div>
           </p>
         </Footer>
       </Layout>

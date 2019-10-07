@@ -2,20 +2,19 @@ import React, { Component } from "react";
 import "../stylesheets/thankfull.css";
 import { connect } from "react-redux";
 import { withRouter, Link, Redirect } from "react-router-dom";
-import { useAlert } from "react-alert";
 import { Table, Progress, Row, Col, Modal, message, Spin } from "antd";
 import { Lang as T } from "../languages";
 import parse from "html-react-parser";
 import Cookies from "universal-cookie";
 import { getSimpleStatisticsData } from "../store/actions/statistics";
 
-function withAlert(Component) {
-  return function WrappedComponent(props) {
-    const alert = useAlert();
+// function withAlert(Component) {
+//   return function WrappedComponent(props) {
+//     const alert = useAlert();
 
-    return <Component {...props} myAlert={alert} />;
-  };
-}
+//     return <Component {...props} myAlert={alert} />;
+//   };
+// }
 
 function renderColumn(page_texts, uuid) {
   const columns = [
@@ -123,7 +122,7 @@ class ThankFul extends Component {
     return false;
   }
   handleOnload = e => {
-    this.props.myAlert.show("Thankyou!");
+    console.log("Everything is working");
   };
   redirectToWhatsApp = (name, link, statusText) => {
     const rendered_statusText = statusText
@@ -397,11 +396,11 @@ const mapDispatchToProps = dispatch => {
     getSimpleStatistic: uuid => dispatch(getSimpleStatisticsData(uuid))
   };
 };
-const HOCThankFul = withAlert(ThankFul);
+// const HOCThankFul = withAlert(ThankFul);
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(HOCThankFul)
+  )(ThankFul)
 );

@@ -228,7 +228,12 @@ class PreCreate extends Component {
 
         <Row style={{ marginTop: "10px" }} type="flex" justify="center">
           <Col span={22}>
-            <Link to="/recovery">
+            <Link
+              to={{
+                pathname: "/recovery",
+                state: { suId: "" }
+              }}
+            >
               <Button type="primary" style={{ width: "100%" }} size={size}>
                 {page_texts.recovery}
               </Button>

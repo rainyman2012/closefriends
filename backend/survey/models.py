@@ -130,6 +130,13 @@ class Survey(models.Model):
 
     objects = SurveyManager()
 
+    class Meta:
+        permissions = [
+            ("create_general_survey", "Can add, edit, delete, update a general survey"),
+            ("create_marriage_survey",
+             "Can add, edit, delete, update a marriage survey"),
+        ]
+
     @property
     def question_count(slef):
         return slef.questions.all().count()

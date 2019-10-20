@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.conf.urls import url
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -18,6 +19,9 @@ urlpatterns += [
     # path('rest-auth/', include('rest_auth.urls')),
     # path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('accounts.urls', namespace='api')),
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     path('survey/', include('survey.urls', namespace='survey')),
     path('test/', include('test_rest.urls')),  # new
 

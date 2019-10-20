@@ -21,13 +21,12 @@ from survey.serializers import (
     StatisticSerializer,
     SimpleStatisticSerializer
 )
-from survey.serializers import UserSerializer
 from .models import Survey, Answer, Question, General
 import io
 from rest_framework import authentication, permissions
 from rest_framework.views import APIView
 from rest_framework import generics
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from django.utils import translation
@@ -156,6 +155,7 @@ class SurveyViewSet(viewsets.ModelViewSet):
     serializer_class = SurveySerializer
     queryset = Survey.objects.all()
     lookup_field = 'uuid'
+    permission_classes = [permissions.IsAuthenticated]
 
     def __init__(self, *args, **kwargs):
         pass

@@ -14,6 +14,7 @@ import DetailResult from "./containers/DetailResult";
 import AnalyzeSurvey from "./containers/AnalyzeSurvey";
 import LinkRecovery from "./containers/LinkRecovery";
 import TestCookie from "./containers/TestCookie";
+import TestLocalStorage from "./containers/TestLocalStorage";
 
 import Survey from "./containers/Survey";
 
@@ -42,6 +43,8 @@ const BaseRouter = () => {
       <Route exact path="/" component={PreCreate} />
       <Route exact path="/precreate" component={PreCreate} />
       <Route exact path="/testcookie/:method" component={TestCookie} />
+      <Route exact path="/local/:method" component={TestLocalStorage} />
+
       {/* <Route exact path="/create" component={HomepageLayout} /> */}
     </Hoc>
   );

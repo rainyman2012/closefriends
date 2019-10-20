@@ -7,7 +7,6 @@ import { Input, Button, Icon, Row, Col, Spin } from "antd";
 import { Menu, Dropdown, message } from "antd";
 import Hoc from "../hoc/hoc";
 import { Lang as T } from "../languages";
-import Cookies from "universal-cookie";
 
 class PreCreate extends Component {
   state = {

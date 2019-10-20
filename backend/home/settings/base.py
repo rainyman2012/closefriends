@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'survey',
+    'accounts',
     'test_rest',
 
 ]
@@ -81,13 +82,13 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
         # 'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 # DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 # DROPBOX_OAUTH2_TOKEN = 'LB_di3ld3WEAAAAAAAAAHDCAGZYepTNakjBapeADWdtjuApZaKiUTkL-O-8gilHx'
 
@@ -103,3 +104,16 @@ LANGUAGES = (
     ('fa', gettext('Persian')),
     ('en', gettext('English')),
 )
+
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+REST_SESSION_LOGIN = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': "accounts.serializers.UserDetailsSerializer",
+}
+
+LOGIN_REDIRECT_URL = "/"

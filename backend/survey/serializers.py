@@ -211,9 +211,3 @@ class SurveySerializer(serializers.ModelSerializer):
             instance.answer_set.add(user_answer)
 
         return instance
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'email']

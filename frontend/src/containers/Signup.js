@@ -1,111 +1,140 @@
 import React from "react";
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Message,
-  Segment
-} from "semantic-ui-react";
+import { Row, Col, Slider, Icon, Spin } from "antd";
+import { Steps, Button, message } from "antd";
 import { connect } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
-import { authSignup } from "../store/actions/auth";
+import AuthForm from "./signup_steps/auth";
+import PersonalForm from "./signup_steps/personal";
+import LanguageForm from "./signup_steps/language";
+import { authSignup, authProfile } from "../store/actions/auth";
+import { HOSTNAME } from "../static";
+import axios from "axios";
 
-class RegistrationForm extends React.Component {
+const { Step } = Steps;
+
+class SignUpForm extends React.Component {
   state = {
+    language: "English",
     username: "",
+    password: "",
     email: "",
-    password1: "",
-    password2: ""
+    realName: "",
+    gender: "",
+    image: null,
+    loading: "",
+    serverError: "",
+    age: 10,
+    step: 1
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { username, email, password1, password2 } = this.state;
-    this.props.signup(username, email, password1, password2);
+  nextStep = () => {
+    const step = this.state.step + 1;
+    this.setState({ step });
   };
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  prevStep = () => {
+    const step = this.state.step - 1;
+    this.setState({ step });
+  };
+
+  handleSubmit = () => {
+    const { username, password } = this.state;
+    this.props.create(username, password);
+  };
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.props.signUpCompleted != nextProps.signUpCompleted) {
+      // gender, lang, age, image, key;
+      this.props.create_profile(
+        this.state.gender,
+        this.state.language,
+        this.state.age,
+        this.state.image,
+        nextProps.token
+      );
+      message.success(
+        "Your account successfully created. redirecting to your dashboard",
+        () => {
+          this.props.history.push("/dashboard");
+        }
+      );
+    }
+  }
+
+  handleChange = (field, value) => {
+    this.setState({
+      [field]: value
+    });
   };
 
   render() {
-    const { username, email, password1, password2 } = this.state;
-    const { error, loading, token } = this.props;
-    if (token) {
-      return <Redirect to="/" />;
-    }
+    if (this.props.loading) return <Spin>Loading</Spin>;
+
+    const { step } = this.state;
+    const {
+      language,
+      username,
+      password,
+      email,
+      realName,
+      gender,
+      image
+    } = this.state;
+    const values = {
+      language,
+      username,
+      password,
+      email,
+      realName,
+      gender,
+      image
+    };
+    let evaluateForms = "";
+    if (!this.state.completed)
+      switch (step) {
+        case 1:
+          evaluateForms = (
+            <LanguageForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+
+          break;
+        case 2:
+          evaluateForms = (
+            <AuthForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+          break;
+        case 3:
+          evaluateForms = (
+            <PersonalForm
+              submit={this.handleSubmit}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+          break;
+        default:
+          evaluateForms = (
+            <LanguageForm
+              next={this.nextStep}
+              handleChange={this.handleChange}
+              values={values}
+            />
+          );
+      }
+
     return (
-      <Grid
-        textAlign="center"
-        style={{ height: "100vh" }}
-        verticalAlign="middle"
-      >
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" color="teal" textAlign="center">
-            Signup to your account
-          </Header>
-          {error && <p>{this.props.error.message}</p>}
-
-          <React.Fragment>
-            <Form size="large" onSubmit={this.handleSubmit}>
-              <Segment stacked>
-                <Form.Input
-                  onChange={this.handleChange}
-                  value={username}
-                  name="username"
-                  fluid
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="Username"
-                />
-                <Form.Input
-                  onChange={this.handleChange}
-                  value={email}
-                  name="email"
-                  fluid
-                  icon="mail"
-                  iconPosition="left"
-                  placeholder="E-mail address"
-                />
-                <Form.Input
-                  onChange={this.handleChange}
-                  fluid
-                  value={password1}
-                  name="password1"
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
-                  type="password"
-                />
-                <Form.Input
-                  onChange={this.handleChange}
-                  fluid
-                  value={password2}
-                  name="password2"
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Confirm password"
-                  type="password"
-                />
-
-                <Button
-                  color="teal"
-                  fluid
-                  size="large"
-                  loading={loading}
-                  disabled={loading}
-                >
-                  Signup
-                </Button>
-              </Segment>
-            </Form>
-            <Message>
-              Already have an account? <NavLink to="/login">Login</NavLink>
-            </Message>
-          </React.Fragment>
-        </Grid.Column>
-      </Grid>
+      <React.Fragment>
+        {evaluateForms}
+        <p>{this.props.token}</p>
+      </React.Fragment>
     );
   }
 }
@@ -114,18 +143,20 @@ const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
     error: state.auth.error,
-    token: state.auth.token
+    token: state.auth.token,
+    signUpCompleted: state.auth.signUpCompleted
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    signup: (username, email, password1, password2) =>
-      dispatch(authSignup(username, email, password1, password2))
+    create: (name, password1) => dispatch(authSignup(name, password1)),
+    create_profile: (gender, lang, age, image, key) =>
+      dispatch(authProfile(gender, lang, age, image, key))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RegistrationForm);
+)(SignUpForm);

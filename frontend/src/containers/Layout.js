@@ -1,12 +1,12 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { changeColor } from "../store/actions/general";
-import { Layout, Row, Col, Icon } from "antd";
+import { Layout, Row, Col, Icon, message, Button } from "antd";
 import "../stylesheets/layout.css";
 import { HOSTNAME } from "../static";
 import { Lang as T } from "../languages";
-
+import { logout } from "../store/actions/auth";
 import gifLogo from "../heart.gif";
 import picLogo from "../heart-pic.jpg";
 import Cookies from "universal-cookie";
@@ -26,6 +26,12 @@ class CustomLayout extends React.Component {
   };
   changeColorHandler = (e, color) => {
     this.props.changeColor(color);
+  };
+
+  handleLogout = () => {
+    this.props.logout();
+    message.success("loged out");
+    this.props.history.push("/");
   };
 
   heartClick = e => {
@@ -78,6 +84,12 @@ class CustomLayout extends React.Component {
         console.log(err);
       });
   }
+  componentDidMount() {
+    document.body.style.fontFamily = "Amiri";
+    let htmlElement = document.getElementsByTagName("html")[0];
+    htmlElement.dir = "rtl";
+  }
+
   render() {
     const general_texts = T[this.props.language];
 
@@ -154,7 +166,8 @@ class CustomLayout extends React.Component {
             style={{ marginTop: "10px", marginBottom: "10px" }}
           >
             <Col
-              span={14}
+              xs={{ span: 23 }}
+              sm={{ span: 8 }}
               className="content_basic"
               style={{
                 borderColor: this.props.color,
@@ -216,6 +229,71 @@ class CustomLayout extends React.Component {
               </div>
             </Col>
           </Row>
+          <div style={{ marginBottom: "10px" }}>
+            {!this.props.authenticated ? (
+              <React.Fragment>
+                <Row type="flex" justify="center">
+                  <Col>
+                    <Link to={{ pathname: "/signup" }}>
+                      <Button
+                        type="primary"
+                        style={{ width: "100px", margin: "5px" }}
+                        size="small"
+                      >
+                        signup
+                      </Button>
+                    </Link>
+                  </Col>
+                  <Col>
+                    <Link to={{ pathname: "/login" }}>
+                      <Button
+                        type="primary"
+                        style={{ width: "100px", margin: "5px" }}
+                        size="small"
+                      >
+                        login
+                      </Button>
+                    </Link>
+                  </Col>
+                  <Col>
+                    <Link to="/">
+                      <Button
+                        type="primary"
+                        style={{ width: "100px", margin: "5px" }}
+                        size="small"
+                      >
+                        Home
+                      </Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </React.Fragment>
+            ) : (
+              <Row type="flex" justify="center" style={{ marginTop: "10px" }}>
+                <Col>
+                  <Button
+                    type="primary"
+                    style={{ width: "100px", margin: "5px" }}
+                    size="small"
+                    onClick={this.handleLogout}
+                  >
+                    logout
+                  </Button>
+                </Col>
+                <Col>
+                  <Link to="/">
+                    <Button
+                      type="primary"
+                      style={{ width: "100px", margin: "5px" }}
+                      size="small"
+                    >
+                      Home
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
+            )}
+          </div>
           {this.props.children}
         </Content>
 
@@ -254,13 +332,15 @@ class CustomLayout extends React.Component {
 const mapStateToProps = state => {
   return {
     color: state.general.color,
-    language: state.general.language
+    language: state.general.language,
+    authenticated: !!state.auth.token
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeColor: color => dispatch(changeColor(color))
+    changeColor: color => dispatch(changeColor(color)),
+    logout: () => dispatch(logout())
   };
 };
 

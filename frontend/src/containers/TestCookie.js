@@ -57,6 +57,10 @@ class TestCookie extends Component {
         value = this.getModernCookie("modernTest");
         message = `Modern test have been got: ${value}`;
         break;
+      case "modernAllGet":
+        const cookies = new Cookies();
+        message = JSON.stringify(cookies.getAll());
+        break;
       default:
         break;
     }

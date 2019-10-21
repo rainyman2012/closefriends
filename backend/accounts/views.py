@@ -23,7 +23,8 @@ from rest_framework.views import APIView
 
 from rest_framework.generics import (
     ListAPIView,
-    CreateAPIView, RetrieveUpdateAPIView
+    CreateAPIView, RetrieveUpdateAPIView,
+    GenericAPIView
 )
 from django.contrib.auth.models import User
 from django.views import View
@@ -73,3 +74,13 @@ class ProfileView(CreateAPIView, RetrieveUpdateAPIView):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
+
+
+class CheckExistUserAPI(GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        user = User.objects.filter(username__iexact=request.data['username'])
+        if user:
+            # In my experience we didnt need that contex variable at all.
+            return Response({"msg": "USER_EXISTED"})
+        else:
+            return Response({"msg": "USER_NOT_EXISTED"})

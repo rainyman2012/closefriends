@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, Redirect } from "react-router-dom";
 import { logout } from "../store/actions/auth";
 import { Row, Col, Menu, Select, Icon, Steps, Button, message } from "antd";
 import { Lang as T } from "../languages";
@@ -11,7 +11,10 @@ import { Lang as T } from "../languages";
 //   return isSSR ? Responsive.onlyTablet.minWidth : window.innerWidth;
 // };
 
-class HomepageLayout extends Component {
+class Dashboard extends Component {
+  componentWillMount() {
+    if (!this.props.authenticated) this.props.history.push("/login");
+  }
   handleGetSurvey = e => {
     this.props.getSurvey();
   };
@@ -21,25 +24,26 @@ class HomepageLayout extends Component {
   };
 
   render() {
-    return <p>Home</p>;
+    return <p>dashboard</p>;
   }
 }
 
-// const mapStateToProps = state => {
-//   return {
-//     authenticated: !!state.auth.token
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    authenticated: !!state.auth.token
+  };
+};
 
 // const mapDispatchToProps = dispatch => {
 //   return {
+//     changeColor: color => dispatch(changeColor(color)),
 //     logout: () => dispatch(logout())
 //   };
 // };
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     null
-  )(HomepageLayout)
+  )(Dashboard)
 );

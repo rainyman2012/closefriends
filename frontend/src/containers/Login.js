@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { NavLink, Redirect } from "react-router-dom";
 import { authLogin } from "../store/actions/auth";
-import { Form, Icon, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Icon, Input, Button, Checkbox, Row, Col, message } from "antd";
 
 class LoginForm extends React.Component {
   handleSubmit = e => {
@@ -15,6 +15,8 @@ class LoginForm extends React.Component {
   };
 
   render() {
+    if (this.props.error) message.error("Password or Username is incorrect");
+
     const { error, loading, token } = this.props;
     if (token) {
       return <Redirect to="/dashboard" />;

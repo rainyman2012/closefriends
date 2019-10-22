@@ -33,6 +33,13 @@ export const logout = () => {
   };
 };
 
+export const authGetUserDetail = userData => {
+  return {
+    type: actionTypes.AUTH_GET_USER_DETAIL,
+    user: userData
+  };
+};
+
 export const checkAuthTimeout = expirationTime => {
   return dispatch => {
     setTimeout(() => {
@@ -111,6 +118,25 @@ export const authProfile = (gender, lang, age, image, key) => {
       .then(res => {
         const data = res.data;
         console.log(data);
+      })
+      .catch(err => {
+        dispatch(authFail(err));
+      });
+  };
+};
+
+export const getUserDetail = key => {
+  return dispatch => {
+    dispatch(authStart());
+    axios
+      .get(`${HOSTNAME}/api/user/`, {
+        headers: {
+          Authorization: "Token " + key
+        }
+      })
+      .then(res => {
+        const userData = res.data;
+        dispatch(authGetUserDetail(userData));
       })
       .catch(err => {
         dispatch(authFail(err));

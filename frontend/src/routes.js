@@ -20,8 +20,18 @@ import SignUpForm from "./containers/Signup";
 import Dashboard from "./containers/dashboard";
 import Survey from "./containers/Survey";
 import Homepage from "./containers/Home";
+import ProtectRoute from "./ProtectRoute";
 
-/* <Route exact path="/survey/:uuid" component={ResultSurvey} /> */
+// class AllRoutes extends Component {
+//   render() {
+//     return (
+//       <Switch>
+//         <Route path='/login' component={Login} />
+//         <ProtectedRoute path='/welcome' component={Welcome} />
+//       </Switch>
+//     )
+//   }
+//}
 
 const BaseRouter = () => {
   return (
@@ -45,7 +55,11 @@ const BaseRouter = () => {
       <Route exact path="/precreate" component={PreCreate} />
       <Route exact path="/testcookie/:method" component={TestCookie} />
       <Route exact path="/local/:method" component={TestLocalStorage} />
-      <Route exact path="/dashboard" component={Dashboard}></Route>
+      <ProtectRoute
+        exact
+        path="/dashboard"
+        component={Dashboard}
+      ></ProtectRoute>
       <Route exact path="/" component={Homepage} />
     </Hoc>
   );

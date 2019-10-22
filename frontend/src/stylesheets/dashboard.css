@@ -1,0 +1,40 @@
+.generalBtn {
+    background: url(./../general.jpg) repeat;
+    cursor: pointer;
+    border: none;
+    background-size: auto;
+    background-position: center center;
+}
+
+.marriageBtn {
+    background: url(./../marriage.jpg) no-repeat;
+    cursor: pointer;
+    border: none;
+}
+
+.marriageBtn.notPayed {
+    opacity: 0.5;
+}
+
+.marriageBtn.payed {
+    opacity: 1;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.text {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 12px;
+    padding: 10px 10px;
+}

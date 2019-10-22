@@ -7,8 +7,6 @@ import "../stylesheets/layout.css";
 import { HOSTNAME } from "../static";
 import { Lang as T } from "../languages";
 import { logout } from "../store/actions/auth";
-import gifLogo from "../heart.gif";
-import picLogo from "../heart-pic.jpg";
 import Cookies from "universal-cookie";
 import axios from "axios";
 
@@ -127,22 +125,7 @@ class CustomLayout extends React.Component {
       );
     const { background_color } = this.state;
     const borderWidth = "3px";
-    let heart_type;
-    if (this.state.heartType === "pic")
-      heart_type = (
-        <img
-          src={picLogo}
-          width="65px"
-          height="60px"
-          style={{ cursor: "pointer" }}
-          alt="loading..."
-          onClick={this.heartClick}
-        />
-      );
-    else
-      heart_type = (
-        <img src={gifLogo} width="65px" height="60px" alt="loading..." />
-      );
+
     return (
       <Layout
         style={{
@@ -288,6 +271,28 @@ class CustomLayout extends React.Component {
                       size="small"
                     >
                       Home
+                    </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/dashboard">
+                    <Button
+                      type="primary"
+                      style={{ width: "100px", margin: "5px" }}
+                      size="small"
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/dashboard">
+                    <Button
+                      type="primary"
+                      style={{ width: "100px", margin: "5px" }}
+                      size="small"
+                    >
+                      Profile
                     </Button>
                   </Link>
                 </Col>

@@ -4,7 +4,6 @@ from django.urls import path, re_path
 from survey.views import (
     SurveyViewSet,
     StatisticViewSet,
-    VerifiedPasswordView,
     QuestionListView,
     GeneralView,
     SimpleStatisticViewSet
@@ -24,7 +23,6 @@ router.register(r'', SurveyViewSet, base_name='survey')
 urlpatterns = router.urls
 urlpatterns += [
     path(r'getQuestions/<str:lang>/<str:sex>/', QuestionListView.as_view()),
-    path(r'verify', VerifiedPasswordView.as_view()),
     path(r'like', GeneralView.as_view())
 ]
 

@@ -1,12 +1,13 @@
+from django.db.models import Q
+from pudb import set_trace
+from rest_framework.utils import html, model_meta, representation
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from .models import Profile
 from django.db.models import Count
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.contrib.auth import get_user_model, authenticate
-
-from rest_framework.utils import html, model_meta, representation
-from pudb import set_trace
+from django.core import exceptions
 
 try:
     import json
@@ -18,7 +19,7 @@ try:
 except ImportError:
     from django.forms.util import ValidationError
 
-from django.db.models import Q
+
 UserModel = get_user_model()
 
 
@@ -112,13 +113,28 @@ class ProfileSerializer(serializers.ModelSerializer):
         return instance
 
 
+class PermissionSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+    """
+    class Meta:
+        model = Permission
+        fields = ('codename',)
+
+
 class UserDetailsSerializer(serializers.ModelSerializer):
     """
     User model w/o password
     """
     profile = ProfileSerializer(required=False, many=False, read_only=True)
+    permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = UserModel
         fields = ('pk', 'username', 'email',
-                  'first_name', 'last_name', 'profile')
+                  'first_name', 'last_name', 'profile', 'permissions')
+
+    def get_permissions(self, obj):
+        if obj.is_superuser:
+            return "All"
+        return obj.user_permissions.all().values_list('codename', flat=True)

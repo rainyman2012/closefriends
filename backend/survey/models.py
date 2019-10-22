@@ -3,10 +3,11 @@ from jsonfield import JSONField
 import uuid
 import base64
 from PIL import Image
-
+from django.contrib.auth.models import Permission
 from django.db.models import Q
 from django.db.models.signals import pre_save
 from passlib.hash import pbkdf2_sha256
+from django.conf import settings
 
 
 def generate_uuid():
@@ -83,10 +84,13 @@ class AnswerManager(models.Manager):
 class SurveyManager(models.Manager):
 
     def create(self, **kwargs):
+        # target_to_permission_mapper = {
+        #     "general": "create_general_survey",
+        #     "marriage": "create_marriage_survey"
+        # }
+        target = kwargs.pop('target')
         obj = super().create(**kwargs)
-        obj.password = pbkdf2_sha256.encrypt(
-            obj.password, rounds=12000, salt_size=32)
-        obj.save()
+        obj.target = Target.objects.get(name=target['name'])
         return obj
 
     def get_random_questions(self, num, obj):
@@ -110,31 +114,34 @@ class SurveyManager(models.Manager):
     def get_questions(self, _uuid):
         return self.filter(uuid__exact=_uuid).first()
 
-    def verify_password(self, password, uuid):
-        obj = self.filter(uuid__iexact=uuid).first()
-        if obj:
-            return pbkdf2_sha256.verify(password, obj.password)
-        return False
-
 
 class Survey(models.Model):
     name = models.CharField(max_length=80)
     questions = models.ManyToManyField(Question)
-    realAnswers = JSONField(null=True)
+    realAnswers = JSONField(blank=True, null=True)
     uuid = models.CharField(max_length=32, blank=True,
                             null=True, default=generate_uuid)
     lang = models.CharField(max_length=10, default="fa")
-    password = models.CharField(max_length=256, default="1234")
 
     sex = models.CharField(max_length=50, blank=True, null=True)
 
+    target = models.ForeignKey(
+        Target, blank=True, null=True, on_delete=models.CASCADE)
+
     objects = SurveyManager()
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='program',
+        on_delete=models.CASCADE, null=True, blank=True
+    )
 
     class Meta:
         permissions = [
             ("create_general_survey", "Can add, edit, delete, update a general survey"),
             ("create_marriage_survey",
              "Can add, edit, delete, update a marriage survey"),
+            ("can_see_analyze_survey",
+             "Can see analyze survey"),
         ]
 
     @property
@@ -149,7 +156,7 @@ class Answer(models.Model):
     name = models.CharField(max_length=80)
     total_correct = models.IntegerField(null=True)
     free = models.BooleanField(default=False)
-    answers = JSONField(null=True)
+    answers = JSONField(blank=True, null=True)
     survey = models.ForeignKey(
         Survey, blank=True, null=True, on_delete=models.CASCADE)
 

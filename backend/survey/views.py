@@ -21,7 +21,7 @@ from survey.serializers import (
     StatisticSerializer,
     SimpleStatisticSerializer
 )
-from .models import Survey, Answer, Question, General
+from .models import Survey, Answer, Question, General, Target
 import io
 from rest_framework import authentication, permissions
 from rest_framework.views import APIView
@@ -36,6 +36,34 @@ from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.db.models import Q
 import random
+
+
+def checkPermission(target, request):
+    target_to_permission_mapper = {
+        "general": "create_general_survey",
+        "marriage": "create_marriage_survey"
+    }
+
+    if target:
+        if target == "general":
+            return JsonResponse(
+                {'status': 'true', 'message': 'Accpeted'}, status=202)
+
+        elif target == "marriage":
+            general_perm = target_to_permission_mapper.get('marriage')
+            if not request.user.has_perm(f'survey.{general_perm}'):
+                return JsonResponse(
+                    {'status': 'false', 'message': 'Permission denied. This user dont have the ability to create or see this type of survey '}, status=403)
+        else:
+            return JsonResponse(
+                {'status': 'false', 'message': 'bad request. You must set appropriate target in your request'}, status=400)
+
+    else:
+        return JsonResponse(
+            {'status': 'false', 'message': 'bad request. You must set target in your request'}, status=400)
+
+    return JsonResponse(
+        {'status': 'true', 'message': 'Accpeted'}, status=202)
 
 
 class GeneralView(View):
@@ -70,26 +98,27 @@ class GeneralView(View):
         return HttpResponse(json)
 
 
-class VerifiedPasswordView(View):
+# class VerifiedPasswordView(View):
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(VerifiedPasswordView, self).dispatch(*args, **kwargs)
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, *args, **kwargs):
+#         return super(VerifiedPasswordView, self).dispatch(*args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        stream = io.BytesIO(request.body)
-        data = JSONParser().parse(stream)
-        verified = False
-        if data['password'] and data['uuid']:
-            verified = Survey.objects.verify_password(
-                data['password'], data['uuid'])
-        json = JSONRenderer().render(verified)
+#     def post(self, request, *args, **kwargs):
+#         stream = io.BytesIO(request.body)
+#         data = JSONParser().parse(stream)
+#         verified = False
+#         if data['password'] and data['uuid']:
+#             verified = Survey.objects.verify_password(
+#                 data['password'], data['uuid'])
+#         json = JSONRenderer().render(verified)
 
-        return HttpResponse(json)
+#         return HttpResponse(json)
 
 
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Question.objects.all()
@@ -99,14 +128,19 @@ class QuestionListView(generics.ListAPIView):
         numberOfTextBaseQuestions = 4
         # numberOfPicBaseQuestions = 1
         # numberOfTextBaseQuestions = 1
+        target = request.query_params.get('target', '')
+        result = checkPermission(target, request)
+        if result.status_code != 202:
+            return result
 
         sex = kwargs.get('sex', '')
         lang = kwargs.get('lang', '')
+
         translation.activate(lang)
-
-        id_list = Question.objects.filter(
-            Q(sex__exact=sex) | Q(sex__isnull=True)).values_list('id', flat=True).order_by('id')
-
+        query = Question.objects.filter(Q(target__name__exact=target)).filter(
+            Q(sex__exact=sex) | Q(sex__isnull=True))
+        id_list = query.values_list('id', flat=True).order_by('id')
+        # ---------------------------------------------------
         cat1 = list(id_list)[0:17]
         cat2 = list(id_list)[17:]
 
@@ -117,7 +151,7 @@ class QuestionListView(generics.ListAPIView):
         final_random_list = random_cat1_list + random_cat2_list
         query_set = Question.objects.filter(
             id__in=final_random_list)
-
+        # ---------------------------------------------------
         # random_list = random.sample(
         #     list(id_list), k=min(len(id_list), 1))
 
@@ -125,6 +159,8 @@ class QuestionListView(generics.ListAPIView):
         #     id__in=random_list)
 
         # Get serilizer to serilize customize questy set
+        # ---------------------------------------------------
+
         serializer = self.get_serializer(query_set, many=True)
         return Response(serializer.data)
 
@@ -206,14 +242,25 @@ class SurveyViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # set_trace()  # This is put to debug.
+
         all_data = request.data
-        realAnswers = all_data.pop('realAnswers')
-        questions = all_data.pop('questions')
+        target = all_data["target"]
+        result = checkPermission(target, request)
+        if result.status_code != 202:
+            return result
+        translation.activate(all_data['lang'])
+        realAnswers = ""
+        questions = ""
+        if 'realAnswers' in all_data:
+            realAnswers = all_data.pop('realAnswers')
+        if 'questions' in all_data:
+            questions = all_data.pop('questions')
 
         ttt = [d['id'] for d in questions]
         queryset = Question.objects.filter(id__in=ttt)
 
-        translation.activate(all_data['lang'])
+        # all_data['user'] = request.user
+        all_data['target'] = {"name": target}
         serializer = self.get_serializer(data=all_data)
         aa = serializer.is_valid()
         instance = serializer.save()
@@ -221,6 +268,7 @@ class SurveyViewSet(viewsets.ModelViewSet):
         instance.realAnswers = json.dumps(realAnswers)
         instance.save()
         headers = self.get_success_headers(serializer.data)
+
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
 
     def get_total_corrected_answer(self, real_answers, answers):

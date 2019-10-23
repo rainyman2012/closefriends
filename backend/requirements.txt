@@ -23,7 +23,7 @@ numpy==1.17.1
 oauthlib==3.0.1
 passlib==1.7.1
 pep8==1.7.1
-Pillow==6.1.0
+Pillow==6.2.0
 psycopg2==2.8.3
 pudb==2019.1
 pycodestyle==2.5.0
